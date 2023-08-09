@@ -1,5 +1,5 @@
-# workshop-integrated-csv
-Example about an IRIS production using IntegratedML capabilities to get predictions about stays of patients in hospitals
+# workshop-quiniela
+Example about an IRIS production using IntegratedML capabilities to get predictions about football matches of spanish league
 
 You can find more in-depth information in https://learning.intersystems.com.
 

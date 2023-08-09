@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IrisService } from '../services/iris.service';
 import { Subscription, switchMap, timer } from 'rxjs';
 
@@ -8,6 +8,9 @@ import { Subscription, switchMap, timer } from 'rxjs';
   styleUrls: ['./train.component.scss']
 })
 export class TrainComponent {
+  
+  @Input() totalData: number = 0;
+
   loading: boolean = false;
   status: String = "";
   subscription !: Subscription;
@@ -27,7 +30,7 @@ export class TrainComponent {
         this.subscription = timer(0, 5000).pipe(
           switchMap(() => this.irisService.getStatus("CheckTrain"))
         ).subscribe(result => {
-          if (result.Status === "Finished"){
+          if (result.Status !== "In Process"){
             this.loading = false;
             this.status = "";
             this.subscription.unsubscribe();
@@ -45,7 +48,7 @@ export class TrainComponent {
   refresh(): void {
     this.irisService.getStatus("CheckTrain").subscribe({
       next: res => { 
-        if (res.Status === "Finished"){
+        if (res.Status !== "In Process"){
           this.loading = false;
           this.status = "";
         }      

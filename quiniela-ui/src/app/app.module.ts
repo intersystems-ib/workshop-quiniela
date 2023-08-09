@@ -19,6 +19,7 @@ import { TrainComponent } from './train/train.component';
 import { PredictionComponent } from './prediction/prediction.component';
 import { MatchComponent } from './match/match.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ResultsComponent } from './results/results.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     PrepareComponent,
     TrainComponent,
     PredictionComponent,
-    MatchComponent
+    MatchComponent,
+    ResultsComponent
   ],
   imports: [
     BrowserModule,

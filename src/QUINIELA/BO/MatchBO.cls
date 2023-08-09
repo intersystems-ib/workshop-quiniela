@@ -36,7 +36,6 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, pResponse As QUINIEL
     set statementUpdateLocalStreak = ##class(%SQL.Statement).%New()
     set statusUpdateLocalStreak = statementUpdateLocalStreak.%Prepare(sqlUpdateLocalStreak)
     if ($$$ISOK(statusUpdateLocalStreak)) {
-        $$$TRACE("Local streak updated")
         set resultSetUpdateLocalStreak = statementUpdateLocalStreak.%Execute(newMatch.%Id())
         if (resultSetUpdateLocalStreak.%SQLCODE = 0) {
             set sqlUpdateVisitorStreak = "UPDATE QUINIELA_Object.MatchPredicted SET QUINIELA_Object.MatchPredicted.VisitorStreak = "_
@@ -52,9 +51,19 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, pResponse As QUINIEL
             set statementUpdateVisitorStreak = ##class(%SQL.Statement).%New()
             set statusUpdateVisitorStreak = statementUpdateVisitorStreak.%Prepare(sqlUpdateVisitorStreak)
             if ($$$ISOK(statusUpdateVisitorStreak)) {
-                $$$TRACE("Visitor streak updated")
                 set resultSetUpdateVisitorStreak = statementUpdateVisitorStreak.%Execute(newMatch.%Id())
-                set sc = statusUpdateVisitorStreak
+                if (resultSetUpdateVisitorStreak.%SQLCODE = 0) {
+                    set sqlPredict = "UPDATE QUINIELA_Object.MatchPredicted mp set mp.PredictedResult = (SELECT PREDICT(QuinielaModel) AS PredictedResult FROM QUINIELA_Object.MatchPredicted mpr WHERE mpr.%Id = mp.%Id) WHERE mp.%Id = ?"
+                    set statementPredict = ##class(%SQL.Statement).%New(), statementPredict.%ObjectSelectMode = 1
+                    set statusPredict = statementPredict.%Prepare(sqlPredict)
+                    if ($$$ISOK(statusPredict)) {                        
+                        set resultSetPredict = statementPredict.%Execute(newMatch.%Id())                        
+                    }
+                    else {
+                        set tSC = statusPredict
+                    }
+                }
+
             }
             else {
                 set sc = statusUpdateVisitorStreak

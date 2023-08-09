@@ -18,7 +18,7 @@
             <div class="card-body">
               <h5 class="card-title">Data preparation</h5>
               <p class="card-text">From this option the data of the matches will be transformed and prepared to be used by our model.</p>
-              <app-prepare></app-prepare>
+              <app-prepare [totalData]="totalDataRaw"></app-prepare>
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
             <div class="card-body">
               <h5 class="card-title">Model training</h5>
               <p class="card-text">This option will create and train a model with the prepared data saved into IRIS.</p>
-              <app-train></app-train>
+              <app-train [totalData]="totalDataPrepared"></app-train>
             </div>
         </div>
     </div>

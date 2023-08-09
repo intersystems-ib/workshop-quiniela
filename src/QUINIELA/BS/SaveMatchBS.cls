@@ -12,10 +12,8 @@ Method OnProcessInput(pInput As %RegisteredObject, Output pOutput As QUINIELA.Me
         set pOutput.Status = "In process"
         set pOutput.Operation = "Save Match"
 
-        Set tSC = ..SendRequestSync("QUINIELA.BO.MatchBO", matchSaveRequest, .pResponse)
-        if $ISOBJECT(pResponse) {
-            set pOutput = pResponse
-        }        
+        Set tSC = ..SendRequestSync("QUINIELA.BO.MatchBO", matchSaveRequest, .pOutput)
+     
         } 
     Catch (ex) {
 	    	set error = ex.DisplayString()            

@@ -44,8 +44,7 @@ ClassMethod GetPrediction() As %Status
         
     } Catch (ex) {
         Do ##class(%REST.Impl).%SetStatusCode("400")
-        Do ##class(%REST.Impl).%WriteResponse(ex.DisplayString())
-        return {"errormessage": "Client error"}
+        return ex.DisplayString()
     }
     Quit $$$OK
 }
@@ -70,8 +69,7 @@ ClassMethod ImportRawMatches() As %DynamicObject
         
     } Catch (ex) {
         Do ##class(%REST.Impl).%SetStatusCode("400")
-        Do ##class(%REST.Impl).%WriteResponse(ex.DisplayString())
-        return {"errormessage": "Client error"}
+        return ex.DisplayString()
     }
 }
 
@@ -95,8 +93,7 @@ ClassMethod GetStatus(operation As %String) As %DynamicObject
         
     } Catch (ex) {
         Do ##class(%REST.Impl).%SetStatusCode("400")
-        Do ##class(%REST.Impl).%WriteResponse(ex.DisplayString())
-        return {"errormessage": "Client error"}
+        return ex.DisplayString()
     }
 }
 
@@ -120,8 +117,7 @@ ClassMethod PrepareData() As %DynamicObject
         
     } Catch (ex) {
         Do ##class(%REST.Impl).%SetStatusCode("400")
-        Do ##class(%REST.Impl).%WriteResponse(ex.DisplayString())
-        return {"errormessage": "Client error"}
+        return ex.DisplayString()
     }
 }
 
@@ -145,8 +141,7 @@ ClassMethod TrainData() As %DynamicObject
         
     } Catch (ex) {
         Do ##class(%REST.Impl).%SetStatusCode("400")
-        Do ##class(%REST.Impl).%WriteResponse(ex.DisplayString())
-        return {"errormessage": "Client error"}
+        return ex.DisplayString()
     }
 }
 
@@ -217,15 +212,14 @@ ClassMethod SaveMatch() As %Status
         // Invocation of BS with person data
         set status = instance.OnProcessInput(bodyJson, .response)
         
-        if $ISOBJECT(response) {
-            // Returning to the client the person object in JSON format after save it
-            Do ##class(%REST.Impl).%WriteResponse(response.%JSONExport())
-	    }
+        if $ISOBJECT(response) {	        
+            Do ##class(%REST.Impl).%SetStatusCode("200")
+            return response.%JSONExport()          
+		}	
         
     } Catch (ex) {
         Do ##class(%REST.Impl).%SetStatusCode("400")
-        Do ##class(%REST.Impl).%WriteResponse(ex.DisplayString())
-        return {"errormessage": "Client error"}
+        return ex.DisplayString()
     }
 }
 

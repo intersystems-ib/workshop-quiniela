@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-    <button type="button" class="btn btn-primary" (click)="launchTraining()" [disabled]="loading">
+    <button type="button" class="btn btn-primary" (click)="launchTraining()" [disabled]="loading || totalData === 0">
         <fa-icon [icon]="['fas', 'dumbbell']"></fa-icon>
         <span class="margin-label">Launch training</span>
         <span style="margin-left: 5px" *ngIf="loading">

@@ -24,6 +24,13 @@ Method OnProcessInput(pInput As QUINIELA.Message.OperationRequest, Output pOutpu
             set pOutput.Operation = pInput.Operation
             set status = ..SendRequestSync("QUINIELA.BO.StatusBO", pRequest, .pOutput)
         }
+        elseif (pInput.Operation = "GetDataCount")
+        {
+            set pOutput = ##class(QUINIELA.Message.OperationResponse).%New()
+            set pOutput.Status = "In process"
+            set pOutput.Operation = pInput.Operation
+            set status = ..SendRequestSync("QUINIELA.BO.StatusBO", pInput, .pOutput)
+        }
         elseif (pInput.Operation = "CheckTrain")
         {
             set pRequest = ##class(QUINIELA.Message.TrainRequest).%New()

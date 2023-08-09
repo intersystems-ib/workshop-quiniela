@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IrisService } from '../services/iris.service';
 import { Subscription, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./prepare.component.scss']
 })
 export class PrepareComponent {
+
+  @Input() totalData: number = 0;
 
   loading: boolean = false;
   status: String = "";
@@ -30,7 +32,7 @@ export class PrepareComponent {
         this.subscription = timer(0, 5000).pipe(
           switchMap(() => this.irisService.getStatus("CheckPrepare"))
         ).subscribe(result => {
-          if (result.Status === "Finished"){
+          if (result.Status !== "In Process"){
             this.loading = false;
             this.status = "";
             this.subscription.unsubscribe();
@@ -48,7 +50,7 @@ export class PrepareComponent {
   refresh(): void {
     this.irisService.getStatus("CheckPrepare").subscribe({
       next: res => { 
-        if (res.Status === "Finished"){
+        if (res.Status !== "In Process"){
           this.loading = false;
           this.status = "";
         }  
