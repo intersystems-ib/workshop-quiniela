@@ -1,0 +1,42 @@
+shared/durable
+settings.json
+# Compiled output
+quiniela-ui/dist
+quiniela-ui/tmp
+quiniela-ui/out-tsc
+quiniela-ui/bazel-out
+
+# Node
+quiniela-ui/node_modules
+quiniela-uinpm-debug.log
+quiniela-uiyarn-error.log
+
+# IDEs and editors
+quiniela-ui/.idea/
+quiniela-ui/.project
+quiniela-ui/.classpath
+quiniela-ui/.c9/
+quiniela-ui/*.launch
+quiniela-ui/.settings/
+quiniela-ui/*.sublime-workspace
+
+# Visual Studio Code
+quiniela-ui/.vscode/*
+quiniela-ui/!.vscode/settings.json
+quiniela-ui/!.vscode/tasks.json
+quiniela-ui/!.vscode/launch.json
+quiniela-ui/!.vscode/extensions.json
+quiniela-ui/.history/*
+
+# Miscellaneous
+quiniela-ui/.angular/cache
+quiniela-ui/.sass-cache/
+quiniela-ui/connect.lock
+quiniela-ui/coverage
+quiniela-ui/libpeerconnection.log
+quiniela-ui/testem.log
+quiniela-ui/typings
+
+# System files
+quiniela-ui/.DS_Store
+quiniela-ui/Thumbs.db

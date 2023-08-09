@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Data management </h1>
+</div>
+<div class="row">
+    <div class="col-sm-6 col-3 col-lg-2 mr-10">
+        <div class="card" style="width: 18rem;">
+            <img src="/assets/images/import.jpg" class="card-img-top" alt="Import data">
+            <div class="card-body">
+              <h5 class="card-title">Data import</h5>
+              <p class="card-text">This option will read the data of the matches from the original web page and save it into IRIS.</p>
+              <app-import></app-import>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-3 col-lg-2 ml-10 mr-10">
+        <div class="card" style="width: 18rem;">
+            <img src="/assets/images/prepare.jpg" class="card-img-top" alt="Import data">
+            <div class="card-body">
+              <h5 class="card-title">Data preparation</h5>
+              <p class="card-text">From this option the data of the matches will be transformed and prepared to be used by our model.</p>
+              <app-prepare></app-prepare>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-3 col-lg-2 ml-10">
+        <div class="card" style="width: 18rem;">
+            <img src="/assets/images/train.jpg" class="card-img-top" alt="Import data">
+            <div class="card-body">
+              <h5 class="card-title">Model training</h5>
+              <p class="card-text">This option will create and train a model with the prepared data saved into IRIS.</p>
+              <app-train></app-train>
+            </div>
+        </div>
+    </div>
+</div>  

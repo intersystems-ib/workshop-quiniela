@@ -1,0 +1,16 @@
+version: "3.1"
+services:  
+  # iris
+  iris:
+    init: true
+    container_name: iris
+    build:
+      context: .
+      dockerfile: iris/Dockerfile
+    ports:
+      - 52774:52773
+    volumes:
+    - ./shared:/shared
+    environment:
+    - ISC_DATA_DIRECTORY=/shared/durable
+    command: --check-caps false

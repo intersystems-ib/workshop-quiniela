@@ -1,0 +1,51 @@
+  <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">QuinielaML</a>
+
+  <div id="navbarSearch" class="navbar-search w-100 collapse">
+    <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
+  </div>
+</header>
+<div class="container-fluid">
+  <div class="row">
+    <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+      <div class="offcanvas-lg offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="sidebarMenuLabel">Company name</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+          <ul class="nav flex-column">
+            
+            <li class="nav-item">
+              <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="loadPage('Data')">
+                <fa-icon [icon]="['fas', 'file-import']"></fa-icon>
+                Data management
+              </span>
+            </li>
+            <li class="nav-item">
+              <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="loadPage('Prediction')">
+                <fa-icon [icon]="['fas', 'futbol']"></fa-icon>
+                Result prediction
+              </span>
+            </li>
+          </ul>          
+
+          <hr class="my-3">
+
+          <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+              <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="logout()">
+                <fa-icon [icon]="['fas', 'right-from-bracket']"></fa-icon>
+                Sign out
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+      <app-data *ngIf="selection === 'Data'"></app-data>
+      <app-prediction *ngIf="selection === 'Prediction'"></app-prediction>
+    </main>
+  </div>
+</div>

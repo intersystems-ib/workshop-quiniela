@@ -1,0 +1,9 @@
+<div style="text-align: center;">
+    <button type="button" class="btn btn-primary" (click)="launchTraining()" [disabled]="loading">
+        <fa-icon [icon]="['fas', 'dumbbell']"></fa-icon>
+        <span class="margin-label">Launch training</span>
+        <span style="margin-left: 5px" *ngIf="loading">
+            <div class="spinner-border text-light spinner-border-sm" role="status"></div>
+        </span>
+    </button>
+</div>
