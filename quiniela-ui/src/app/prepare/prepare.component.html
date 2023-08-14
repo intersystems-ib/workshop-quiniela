@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-    <button type="button" class="btn btn-primary" (click)="launchPreparation()" [disabled]="loading || totalData === 0">
+    <button type="button" class="btn official-red" (click)="launchPreparation()" [disabled]="loading || totalData === 0">
         <fa-icon [icon]="['fas', 'flask-vial']"></fa-icon>
         <span class="margin-label">Launch preparation</span>
         <span style="margin-left: 5px" *ngIf="loading">

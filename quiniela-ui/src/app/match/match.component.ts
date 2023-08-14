@@ -26,9 +26,7 @@ export class MatchComponent {
     Division: new UntypedFormControl('', {nonNullable: true, validators: [Validators.required]})
   })
 
-  constructor(private irisService: IrisService,
-    private router: Router,
-    private fb: FormBuilder) {
+  constructor(private irisService: IrisService) {
     
       this.dateValue = new Date();
   }

@@ -56,4 +56,16 @@ export class IrisService {
       IRIS_API + 'saveMatch',match
     )
   }
+
+  saveResult(match: any): Observable<any> {
+    return this.http.post<Response>(
+      IRIS_API + 'saveResult',match
+    )
+  }
+
+  getMatches(): Observable<any> {
+    return this.http.get<Response>(
+      IRIS_API + 'getMatches', httpOptions
+    )
+  }
 }

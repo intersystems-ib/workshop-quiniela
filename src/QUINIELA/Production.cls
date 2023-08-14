@@ -26,7 +26,9 @@ XData ProductionDefinition
   </Item>
   <Item Name="QUINIELA.BS.SaveMatchBS" Category="" ClassName="QUINIELA.BS.SaveMatchBS" PoolSize="0" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
-  <Item Name="QUINIELA.BO.MatchBO" Category="" ClassName="QUINIELA.BO.MatchBO" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
+  <Item Name="QUINIELA.BO.MatchBO" Category="" ClassName="QUINIELA.BO.MatchBO" PoolSize="1" Enabled="true" Foreground="false" Comment="" LogTraceEvents="true" Schedule="">
+  </Item>
+  <Item Name="QUINIELA.BS.SaveResultBS" Category="" ClassName="QUINIELA.BS.SaveResultBS" PoolSize="0" Enabled="true" Foreground="false" Comment="" LogTraceEvents="false" Schedule="">
   </Item>
 </Production>
 }

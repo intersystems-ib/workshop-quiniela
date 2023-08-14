@@ -1,1 +1,54 @@
-<p>results works!</p>
+<div class="row">
+    <table class="table table-hover">
+        <thead>
+            <tr style="text-align: center;">
+                <th scope="col">Day</th>
+                <th scope="col">Division</th>
+                <th scope="col">Journey</th>
+                <th scope="col">Local</th>
+                <th scope="col">Visitor</th>
+                <th scope="col">Result</th>
+                <th scope="col">Prediction</th>
+                <th scope="col">1</th>
+                <th scope="col">X</th>
+                <th scope="col">2</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="text-align: center;" *ngFor="let match of matches" (click)="open(content, match)">
+                <td>{{match.day}}</td>
+                <td>{{match.division}}</td>
+                <td>{{match.journey}}</td>
+                <td>{{match.local}}</td>
+                <td>{{match.visitor}}</td>
+                <td>{{match.result}}</td>
+                <td>{{match.predictedResult}}</td>
+                <td>{{match.probability1}} %</td>
+                <td>{{match.probabilityX}} %</td>
+                <td>{{match.probability2}} %</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<ng-template #content>
+<div class="modal fade" tabindex="-1" id="resultModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{modalMatchTitle}}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form (ngSubmit)="onSubmit()" [formGroup]="resultForm">
+                <input type="text" formControlName="LocalGoals"> - <input type="text" formControlName="VisitorGoals">  
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger">Delete match</button>
+          <button type="button" class="btn btn-primary">Save result</button>
+        </div>
+      </div>
+    </div>
+</div>
+</ng-template>

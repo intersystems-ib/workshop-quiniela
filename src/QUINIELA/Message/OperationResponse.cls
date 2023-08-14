@@ -8,7 +8,7 @@ Property Operation As %String;
 Property Status As %String;
 
 /// Description
-Property Result As %String(MAXLEN = 8000);
+Property Result As %String(MAXLEN = "");
 
 Storage Default
 {

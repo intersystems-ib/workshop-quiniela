@@ -8,10 +8,6 @@ import { IrisService } from '../services/iris.service';
 })
 export class PredictionComponent {
 
-  constructor(private irisService: IrisService) {
-    
-  }
-
 }
 
 

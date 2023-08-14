@@ -9,9 +9,6 @@ Method OnProcessInput(pInput As QUINIELA.Message.OperationRequest, Output pOutpu
             set pRequest = ##class(QUINIELA.Message.ImportRequest).%New()
             set pRequest.Operation = pInput.Operation
 
-            set pOutput = ##class(QUINIELA.Message.ImportResponse).%New()
-            set pOutput.Status = "In process"
-            set pOutput.Operation = pInput.Operation
             set status = ..SendRequestSync("QUINIELA.BO.StatusBO", pRequest, .pOutput)
         }
         elseif (pInput.Operation = "CheckPrepare")
@@ -19,16 +16,10 @@ Method OnProcessInput(pInput As QUINIELA.Message.OperationRequest, Output pOutpu
             set pRequest = ##class(QUINIELA.Message.PrepareRequest).%New()
             set pRequest.Operation = pInput.Operation
 
-            set pOutput = ##class(QUINIELA.Message.PrepareResponse).%New()
-            set pOutput.Status = "In process"
-            set pOutput.Operation = pInput.Operation
             set status = ..SendRequestSync("QUINIELA.BO.StatusBO", pRequest, .pOutput)
         }
         elseif (pInput.Operation = "GetDataCount")
         {
-            set pOutput = ##class(QUINIELA.Message.OperationResponse).%New()
-            set pOutput.Status = "In process"
-            set pOutput.Operation = pInput.Operation
             set status = ..SendRequestSync("QUINIELA.BO.StatusBO", pInput, .pOutput)
         }
         elseif (pInput.Operation = "CheckTrain")
@@ -36,9 +27,6 @@ Method OnProcessInput(pInput As QUINIELA.Message.OperationRequest, Output pOutpu
             set pRequest = ##class(QUINIELA.Message.TrainRequest).%New()
             set pRequest.Operation = pInput.Operation
 
-            set pOutput = ##class(QUINIELA.Message.TrainResponse).%New()
-            set pOutput.Status = "In process"
-            set pOutput.Operation = pInput.Operation
             set status = ..SendRequestSync("QUINIELA.BO.StatusBO", pRequest, .pOutput)
         }
         elseif (pInput.Operation = "Import")
@@ -78,11 +66,6 @@ Method OnProcessInput(pInput As QUINIELA.Message.OperationRequest, Output pOutpu
             set pRequest = ##class(QUINIELA.Message.DictionaryRefereeRequest).%New()
             set pRequest.Operation = pInput.Operation
 
-            set pOutput = ##class(QUINIELA.Message.DictionaryRefereeResponse).%New()
-            set pOutput.Status = "In process"
-            set pOutput.Operation = "GetReferees"
-            set pOutput.Result = ""
-
             set status = ..SendRequestSync("QUINIELA.BO.UtilsBO", pRequest, .pOutput)
         }
         elseif (pInput.Operation = "GetTeams")
@@ -90,12 +73,14 @@ Method OnProcessInput(pInput As QUINIELA.Message.OperationRequest, Output pOutpu
             set pRequest = ##class(QUINIELA.Message.DictionaryTeamRequest).%New()
             set pRequest.Operation = pInput.Operation
 
-            set pOutput = ##class(QUINIELA.Message.DictionaryTeamResponse).%New()
-            set pOutput.Status = "In process"
-            set pOutput.Operation = "GetTeams"
-            set pOutput.Result = ""
-
             set status = ..SendRequestSync("QUINIELA.BO.UtilsBO", pRequest, .pOutput)
+        }
+        elseif (pInput.Operation = "GetMatches")
+        {
+            set pRequest = ##class(QUINIELA.Message.OperationRequest).%New()
+            set pRequest.Operation = pInput.Operation
+
+            set status = ..SendRequestSync("QUINIELA.BO.MatchBO", pRequest, .pOutput)
         }
 
         } 
