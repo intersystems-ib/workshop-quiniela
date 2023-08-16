@@ -182,7 +182,6 @@ Method DeleteResult(pRequest As QUINIELA.Message.DeleteRequest, Output pResponse
         set sc = statusDeleteResult
     }
     set pResponse.Status = "Finished"
-    set pResponse.Result = sc
 
     Quit sc
 }
