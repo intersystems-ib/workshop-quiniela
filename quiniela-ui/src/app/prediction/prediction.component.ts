@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IrisService } from '../services/iris.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-prediction',
@@ -7,6 +7,15 @@ import { IrisService } from '../services/iris.service';
   styleUrls: ['./prediction.component.scss']
 })
 export class PredictionComponent {
+
+  constructor(private router: Router) { }
+
+  refreshResults() {
+    const currentRoute = this.router.url;
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+      this.router.navigate([currentRoute]);
+  }); 
+  }
 
 }
 

@@ -2,9 +2,22 @@
     <h1 class="h2">Predictions</h1>
 </div>
 <div style="height: 10%;">
-    <app-match></app-match>
+    <app-match (newMatchEvent)="refreshResults()"></app-match>
 </div>
-<div style="height: 80%; overflow-y: auto;">
-    <app-results></app-results>
+<ul class="nav nav-tabs mt-3">
+    <li class="nav-item">
+        <button class="nav-link active" id="first-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button" role="tab" aria-controls="first-tab-pane" aria-selected="true">First Division</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" id="second-tab" data-bs-toggle="tab" data-bs-target="#second-tab-pane" type="button" role="tab" aria-controls="second-tab-pane" aria-selected="false">Second Division</button>
+    </li>
+</ul>
+<div class="tab-content mt-1" id="myTabContent" style="height: 80%; overflow-y: auto;">
+    <div class="tab-pane fade show active" id="first-tab-pane" role="tabpanel" aria-labelledby="first-tab" tabindex="0">
+        <app-results [division]="1"></app-results>
+    </div>
+    <div class="tab-pane fade show" id="second-tab-pane" role="tabpanel" aria-labelledby="second-tab" tabindex="0">
+        <app-results [division]="2"></app-results>
+    </div>
 </div>
 

@@ -90,9 +90,9 @@ html, body {
 }
 
 .official-red {
-  --bs-btn-color: #fff;
+  --bs-btn-color: #fff!important;
   --bs-btn-hover-color: #fff;
-  --bs-btn-bg: #d71a00;
+  --bs-btn-bg: #d71a00!important; 
   --bs-btn-border-color: #d71a00
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #ab1500;

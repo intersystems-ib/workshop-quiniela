@@ -30,25 +30,34 @@
         </tbody>
     </table>
 </div>
-<ng-template #content>
-<div class="modal fade" tabindex="-1" id="resultModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
+<ng-template #content let-modal>
+    <form (ngSubmit)="onSubmit()" [formGroup]="resultForm">
         <div class="modal-header">
-          <h5 class="modal-title">{{modalMatchTitle}}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title" id="modal-basic-title">Result of the match</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="modal.dismiss()"></button>
         </div>
         <div class="modal-body">
-            <form (ngSubmit)="onSubmit()" [formGroup]="resultForm">
-                <input type="text" formControlName="LocalGoals"> - <input type="text" formControlName="VisitorGoals">  
-            </form>
+            <div class="row align-items-center">
+                <div class="col-4 text-end">
+                    <span>{{selectedMatch?.local}}</span>
+                </div>
+                <div class="col-2 text-center">
+                    <input type="text" class="form-control" formControlName="LocalGoals">
+                </div>
+                <div class="col-2 text-center">
+                    <input type="text" class="form-control" formControlName="VisitorGoals">  
+                </div>
+                <div class="col-4">
+                    <span>{{selectedMatch?.visitor}}</span>
+                </div>
+            </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-danger">Delete match</button>
-          <button type="button" class="btn btn-primary">Save result</button>
+            <button type="button" class="btn btn-secondary">Delete Match</button>
+            <button type="submit" class="btn official-red" (click)="modal.dismiss()">
+                <fa-icon [icon]="['fas', 'futbol']"></fa-icon>
+                <span class="margin-label">Save Result</span>  
+            </button>
         </div>
-      </div>
-    </div>
-</div>
+    </form>
 </ng-template>

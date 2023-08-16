@@ -1,51 +1,43 @@
-  <header class="navbar sticky-top flex-md-nowrap p-0 shadow" data-bs-theme="dark">
-  <img src="/assets/images/logo.png" alt="QuinielaML" height="48px">
-
-  <div id="navbarSearch" class="navbar-search w-100 collapse">
-    <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
-  </div>
+<header class="navbar sticky-top flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+    <a data-bs-toggle="offcanvas" href="#offcanvasMenu" role="button" aria-controls="offcanvasMenu"> 
+      <img src="/assets/images/logo.png" alt="QuinielaML" height="60px" class="ml-5 mt-1 mb-1">
+    </a>
 </header>
-<div class="container-fluid">
-  <div class="row">
-    <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
-      <div class="offcanvas-lg offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
-        <div class="offcanvas-header">
-          <h5 class="offcanvas-title" id="sidebarMenuLabel">Company name</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
-          <ul class="nav flex-column">
-            
-            <li class="nav-item">
-              <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="loadPage('Data')">
-                <fa-icon [icon]="['fas', 'file-import']"></fa-icon>
-                Data management
-              </span>
-            </li>
-            <li class="nav-item">
-              <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="loadPage('Prediction')">
-                <fa-icon [icon]="['fas', 'futbol']"></fa-icon>
-                Result prediction
-              </span>
-            </li>
-          </ul>          
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasMenuLabel"><img src="/assets/images/icon.png" alt="QuinielaML" height="48px"> Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+    <ul class="nav flex-column">
+      
+      <li class="nav-item">
+        <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="loadPage('Data')" data-bs-dismiss="offcanvas">
+          <fa-icon [icon]="['fas', 'file-import']"></fa-icon>
+          Data management
+        </span>
+      </li>
+      <li class="nav-item">
+        <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="loadPage('Prediction')" data-bs-dismiss="offcanvas">
+          <fa-icon [icon]="['fas', 'futbol']"></fa-icon>
+          Result prediction
+        </span>
+      </li>
+    </ul>          
 
-          <hr class="my-3">
+    <hr class="my-3">
 
-          <ul class="nav flex-column mb-auto">
-            <li class="nav-item">
-              <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="logout()">
-                <fa-icon [icon]="['fas', 'right-from-bracket']"></fa-icon>
-                Sign out
-              </span>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <app-data *ngIf="selection === 'Data'"></app-data>
-      <app-prediction *ngIf="selection === 'Prediction'"></app-prediction>
-    </main>
+    <ul class="nav flex-column mb-auto">
+      <li class="nav-item">
+        <span class="nav-link d-flex align-items-center gap-2 pointer" (click)="logout()">
+          <fa-icon [icon]="['fas', 'right-from-bracket']"></fa-icon>
+          Sign out
+        </span>
+      </li>
+    </ul>
   </div>
 </div>
+<main class="ml-10 mr-10">
+  <app-data *ngIf="selection === 'Data'"></app-data>
+  <app-prediction *ngIf="selection === 'Prediction'"></app-prediction>
+</main>

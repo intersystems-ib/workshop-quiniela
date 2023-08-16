@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IrisService } from '../services/iris.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -10,6 +10,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class ResultsComponent {
 
+  @Input() division: number = 1;
   public matches: Array<any> = []
   public modalMatchTitle: String = "";
   public resultForm = new UntypedFormGroup({
@@ -18,12 +19,16 @@ export class ResultsComponent {
     VisitorGoals: new UntypedFormControl('', {nonNullable: true, validators: [Validators.required]})
   })
 
+  public selectedMatch: any;
+
   constructor(private irisService: IrisService,
     private modalService: NgbModal) {
     
   }
 
   open(content: any, match: any) {
+    this.selectedMatch = match;
+    this.matchSelected(match);
 		this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
 			(result) => {
 			},
@@ -37,7 +42,7 @@ export class ResultsComponent {
   }
   
   getMatches(): void {
-    this.irisService.getMatches().subscribe({
+    this.irisService.getMatches(this.division).subscribe({
       next: res => {  
         this.matches = JSON.parse(res.Result.replace("\\",""));
       },

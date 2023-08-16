@@ -7,3 +7,7 @@ main {
 header {
     background-color: rgb(222, 226, 230);
 }
+
+.offcanvas {
+    --bs-offcanvas-width: 250px!important;
+}

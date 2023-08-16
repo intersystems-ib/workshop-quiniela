@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { IrisService } from '../services/iris.service';
 import { FormBuilder, FormControl, FormGroup, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
@@ -9,6 +9,8 @@ import { FormBuilder, FormControl, FormGroup, UntypedFormControl, UntypedFormGro
   styleUrls: ['./match.component.scss']
 })
 export class MatchComponent {
+
+  @Output() newMatchEvent = new EventEmitter<string>();
 
   public referees: Array<String> = [];
   public teams: Array<String> = [];
@@ -94,7 +96,7 @@ export class MatchComponent {
     };
     
     this.irisService.saveMatch(matchData).subscribe({next: res => {  
-      
+      this.newMatchEvent.emit(res);
     },
     error: err => {
       console.error(JSON.stringify(err));
