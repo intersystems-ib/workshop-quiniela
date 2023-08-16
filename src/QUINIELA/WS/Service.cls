@@ -17,7 +17,7 @@ XData UrlMap [ XMLNamespace = "https://www.intersystems.com/urlmap" ]
     <Route Url="/getTeams" Method="GET" Call="GetTeams" />
 	<Route Url="/saveMatch" Method="POST" Call="SaveMatch" />
     <Route Url="/saveResult" Method="POST" Call="SaveResult" />
-    <Route Url="/getMatches" Method="GET" Call="GetMatches" />
+    <Route Url="/getMatches/:division" Method="GET" Call="GetMatches" />
 </Routes>
 }
 
@@ -61,8 +61,10 @@ ClassMethod ImportRawMatches() As %DynamicObject
         set newRequest.Operation = "Import"
         
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
-       	
-        set status = instance.OnProcessInput(newRequest, .response)
+       	set response = ##class(QUINIELA.Message.ImportResponse).%New()
+        set response.Status = "In process"
+        set response.Operation = "Import"
+        set status = instance.SendRequestAsync("QUINIELA.BP.ImportBPL", newRequest, .response)
         
         if $ISOBJECT(response) {	        
             Do ##class(%REST.Impl).%SetStatusCode("200")
@@ -79,20 +81,44 @@ ClassMethod GetStatus(operation As %String) As %DynamicObject
 {
     Try {
         Do ##class(%REST.Impl).%SetContentType("application/json")
-        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
+        If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit	
+
+        set pRequest = ##class(QUINIELA.Message.OperationRequest).%New()        
         
-        set newRequest = ##class(QUINIELA.Message.OperationRequest).%New()
-        set newRequest.Operation = operation
-        
+        if (operation = "CheckImport")
+        {
+            set pRequest = ##class(QUINIELA.Message.ImportRequest).%New()
+            set pRequest.Operation = operation
+            
+        }
+        elseif (operation = "CheckPrepare")
+        {
+            set pRequest = ##class(QUINIELA.Message.PrepareRequest).%New()
+            set pRequest.Operation = operation
+        }
+        elseif (operation = "GetDataCount")
+        {
+            set pRequest = ##class(QUINIELA.Message.OperationRequest).%New()
+            set pRequest.Operation = operation
+        }
+        elseif (operation = "CheckTrain")
+        {
+            set pRequest = ##class(QUINIELA.Message.TrainRequest).%New()
+            set pRequest.Operation = operation
+        }
+        else {
+             Do ##class(%REST.Impl).%SetStatusCode("400")
+             return "Method not found"
+        }
+
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
-       	
-        set status = instance.OnProcessInput(newRequest, .response)
-        
+        set status = instance.SendRequestSync("QUINIELA.BO.StatusBO", pRequest, .response)
+
         if $ISOBJECT(response) {	        
             Do ##class(%REST.Impl).%SetStatusCode("200")
             return response.%JSONExport()
-		}		
-        
+        }
+
     } Catch (ex) {
         Do ##class(%REST.Impl).%SetStatusCode("400")
         return ex.DisplayString()
@@ -109,9 +135,12 @@ ClassMethod PrepareData() As %DynamicObject
         set newRequest.Operation = "Prepare"
 
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
-       	
-        set status = instance.OnProcessInput(newRequest, .response)
-        
+        set response = ##class(QUINIELA.Message.PrepareResponse).%New()
+        set response.Status = "In process"
+        set response.Operation = "Prepare"
+
+        set status = instance.SendRequestAsync("QUINIELA.BP.PrepareBP", newRequest, .response)
+       	      
         if $ISOBJECT(response) {	        
         	Do ##class(%REST.Impl).%SetStatusCode("200")
             return response.%JSONExport()
@@ -133,9 +162,13 @@ ClassMethod TrainData() As %DynamicObject
         set newRequest.Operation = "Train"
 
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
-       	
-        set status = instance.OnProcessInput(newRequest, .response)
         
+        set response = ##class(QUINIELA.Message.TrainResponse).%New()
+        set response.Status = "In process"
+        set response.Operation = "Train"
+
+        set status = instance.SendRequestAsync("QUINIELA.BP.TrainBP", newRequest, .response)
+       	        
         if $ISOBJECT(response) {	        
         	Do ##class(%REST.Impl).%SetStatusCode("200")
             return response.%JSONExport()
@@ -153,13 +186,12 @@ ClassMethod GetReferees() As %DynamicObject
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         
-        set newRequest = ##class(QUINIELA.Message.OperationRequest).%New()
+        set newRequest = ##class(QUINIELA.Message.DictionaryRefereeRequest).%New()
         set newRequest.Operation = "GetReferees"
         
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
+        set status = instance.SendRequestSync("QUINIELA.BO.UtilsBO", newRequest, .response)
        	
-        set status = instance.OnProcessInput(newRequest, .response)
-        
         if $ISOBJECT(response) {	        
             Do ##class(%REST.Impl).%SetStatusCode("200")
             return response.%JSONExport()          
@@ -177,12 +209,12 @@ ClassMethod GetTeams() As %DynamicObject
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         
-        set newRequest = ##class(QUINIELA.Message.OperationRequest).%New()
+        set newRequest = ##class(QUINIELA.Message.DictionaryTeamRequest).%New()
         set newRequest.Operation = "GetTeams"
         
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
        	
-        set status = instance.OnProcessInput(newRequest, .response)
+        set status = instance.SendRequestSync("QUINIELA.BO.UtilsBO", newRequest, .response)
         
         if $ISOBJECT(response) {	        
             Do ##class(%REST.Impl).%SetStatusCode("200")
@@ -207,13 +239,15 @@ ClassMethod SaveMatch() As %Status
         set bodyJson = %request.Content.Read()
         
         // Creation of BS instance
-        set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.SaveMatchBS", .instance)
-       	
-        #dim response as QUINIELA.Message.MatchResponse
+        set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
 
-        // Invocation of BS with person data
-        set status = instance.OnProcessInput(bodyJson, .response)
-        
+        #Dim matchSaveRequest As QUINIELA.Message.MatchRequest
+        set matchSaveRequest = ##class(QUINIELA.Message.MatchRequest).%New()
+        set matchSaveRequest.Operation = "SaveMatch"
+        set matchSaveRequest.JSON = bodyJson
+
+        Set tSC = instance.SendRequestSync("QUINIELA.BO.MatchBO", matchSaveRequest, .response)
+
         if $ISOBJECT(response) {	        
             Do ##class(%REST.Impl).%SetStatusCode("200")
             return response.%JSONExport()          
@@ -235,12 +269,14 @@ ClassMethod SaveResult() As %Status
         set bodyJson = %request.Content.Read()
         
         // Creation of BS instance
-        set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.SaveResultBS", .instance)
-       	
-        #dim response as QUINIELA.Message.MatchResponse
+        set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
 
-        // Invocation of BS with person data
-        set status = instance.OnProcessInput(bodyJson, .response)
+        #Dim resultSaveRequest As QUINIELA.Message.ResultRequest
+        set resultSaveRequest = ##class(QUINIELA.Message.ResultRequest).%New()
+        set resultSaveRequest.Operation = "Save Result"
+        set resultSaveRequest.JSON = bodyJson
+
+        Set tSC = instance.SendRequestSync("QUINIELA.BO.MatchBO", resultSaveRequest, .response)
         
         if $ISOBJECT(response) {	        
             Do ##class(%REST.Impl).%SetStatusCode("200")
@@ -253,18 +289,18 @@ ClassMethod SaveResult() As %Status
     }
 }
 
-ClassMethod GetMatches() As %DynamicObject
+ClassMethod GetMatches(division As %String) As %DynamicObject
 {
     Try {
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         
         set newRequest = ##class(QUINIELA.Message.OperationRequest).%New()
-        set newRequest.Operation = "GetMatches"
+        set newRequest.Operation = "GetMatches_"_division
         
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
-       	
-        set status = instance.OnProcessInput(newRequest, .response)
+
+        set status = instance.SendRequestSync("QUINIELA.BO.MatchBO", newRequest, .response)
         
         if $ISOBJECT(response) {	        
             Do ##class(%REST.Impl).%SetStatusCode("200")
