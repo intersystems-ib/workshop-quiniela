@@ -163,6 +163,29 @@ Method SaveResult(pRequest As QUINIELA.Message.ResultRequest, Output pResponse A
     Quit sc
 }
 
+Method DeleteResult(pRequest As QUINIELA.Message.DeleteRequest, Output pResponse As QUINIELA.Message.DeleteResponse) As %Status
+{
+    set sc = $$$OK
+
+    set pResponse = ##class(QUINIELA.Message.DeleteResponse).%New()
+    set pResponse.Operation = pRequest.Operation
+
+    set sqlDeleteResult = "DELETE FROM QUINIELA_Object.MatchPredicted "_
+        "WHERE ID = ? "
+    set statementDeleteResult = ##class(%SQL.Statement).%New()
+    set statusDeleteResult = statementDeleteResult.%Prepare(sqlDeleteResult)
+    if ($$$ISOK(statusDeleteResult)) {
+        set resultSetDeleteResult = statementDeleteResult.%Execute(pRequest.MatchId)
+        set sc = resultSetDeleteResult
+    }
+    else {
+        set sc = resultSetDeleteResult
+    }
+    set pResponse.Status = "Finished"
+
+    Quit sc
+}
+
 XData MessageMap
 {
 <MapItems>
@@ -174,6 +197,9 @@ XData MessageMap
   </MapItem>
   <MapItem MessageType="QUINIELA.Message.OperationRequest">
     <Method>GetMatches</Method>
+  </MapItem>
+  <MapItem MessageType="QUINIELA.Message.DeleteRequest">
+    <Method>DeleteResult</Method>
   </MapItem>
 </MapItems>
 }

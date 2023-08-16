@@ -68,4 +68,10 @@ export class IrisService {
       IRIS_API + 'getMatches/' + division, httpOptions
     )
   }
+
+  deleteMatch(matchId: number): Observable<any> {
+    return this.http.delete<Response>(
+      IRIS_API + 'deleteMatch/' + matchId, httpOptions
+    )
+  }
 }

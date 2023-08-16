@@ -53,7 +53,10 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary">Delete Match</button>
+            <button type="button" class="btn btn-secondary" (click)="deleteMatch(selectedMatch?.id); modal.dismiss()">
+                <fa-icon [icon]="['fas', 'trash']"></fa-icon>
+                <span class="margin-label">Delete Match</span>
+            </button>
             <button type="submit" class="btn official-red" (click)="modal.dismiss()">
                 <fa-icon [icon]="['fas', 'futbol']"></fa-icon>
                 <span class="margin-label">Save Result</span>  

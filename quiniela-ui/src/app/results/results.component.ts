@@ -52,6 +52,16 @@ export class ResultsComponent {
     });
   }
 
+  deleteMatch(matchId: number): void {
+    this.irisService.deleteMatch(matchId).subscribe({
+      next: res => {  
+      },
+      error: err => {
+        console.error(JSON.stringify(err));
+      }
+    });
+  }
+
   matchSelected(match: any): void {
     this.modalMatchTitle = match.local +" - "+match.visitor;
     this.localGoals?.setValue(match.localGoals);
