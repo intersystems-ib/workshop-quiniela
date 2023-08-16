@@ -1,5 +1,15 @@
 version: "3.1"
 services:  
+  # angular
+  angular:
+    init: true
+    container_name: quiniela-ui
+    build:
+      context: .
+      dockerfile: quiniela-ui/Dockerfile
+    ports:
+      - 4200:80
+    
   # iris
   iris:
     init: true
