@@ -80,7 +80,7 @@ export class ResultsComponent {
     };
 
     this.irisService.saveResult(resultData).subscribe({next: res => {  
-      
+      this.getMatches();
     },
     error: err => {
       console.error(JSON.stringify(err));

@@ -3,7 +3,7 @@ Class QUINIELA.BO.MatchBO Extends Ens.BusinessOperation
 
 Parameter INVOCATION = "Queue";
 
-Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, pResponse As QUINIELA.Message.MatchResponse) As %Status
+Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As QUINIELA.Message.MatchResponse) As %Status
 {
     set sc = $$$OK
 
@@ -79,10 +79,10 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, pResponse As QUINIEL
     Quit sc
 }
 
-Method GetMatches(pRequest As QUINIELA.Message.OperationRequest, pResponse As QUINIELA.Message.OperationResponse) As %Status
+Method GetMatches(pRequest As QUINIELA.Message.OperationRequest, Output pResponse As QUINIELA.Message.OperationResponse) As %Status
 {
     Set sc = $$$OK
-    set pResponse = ##class(QUINIELA.Message.DictionaryRefereeResponse).%New()
+    set pResponse = ##class(QUINIELA.Message.OperationResponse).%New()
     set pResponse.Operation = pRequest.Operation
     set division = $PIECE(pRequest.Operation,"_",2)
     
@@ -110,8 +110,8 @@ Method GetMatches(pRequest As QUINIELA.Message.OperationRequest, pResponse As QU
                 "local": (resultSetMatches.%GetData(5)), "visitor": (resultSetMatches.%GetData(6)),
                 "predictedResult": (resultSetMatches.%GetData(7)), "probability1": (resultSetMatches.%GetData(8)),
                 "probabilityX": (resultSetMatches.%GetData(9)), "probability2": (resultSetMatches.%GetData(10)),
-                "localGoals": (resultSetMatches.%GetData(11)), "visitorGoals": (resultSetMatches.%GetData(11)),
-                "result": (resultSetMatches.%GetData(12))})
+                "localGoals": (resultSetMatches.%GetData(11)), "visitorGoals": (resultSetMatches.%GetData(12)),
+                "result": (resultSetMatches.%GetData(13))})
             }            
             set pResponse.Status = "Finished" 
             set pResponse.Result = refereeArray.%ToJSON()
@@ -124,7 +124,7 @@ Method GetMatches(pRequest As QUINIELA.Message.OperationRequest, pResponse As QU
     return sc
 }
 
-Method SaveResult(pRequest As QUINIELA.Message.ResultRequest, pResponse As QUINIELA.Message.ResultResponse) As %Status
+Method SaveResult(pRequest As QUINIELA.Message.ResultRequest, Output pResponse As QUINIELA.Message.ResultResponse) As %Status
 {
     set sc = $$$OK
 
@@ -132,23 +132,33 @@ Method SaveResult(pRequest As QUINIELA.Message.ResultRequest, pResponse As QUINI
     set pResponse.Operation = pRequest.Operation
 
     set dynEntity = {}.%FromJSON(pRequest.JSON)
-    
-    set match = ##class(QUINIELA.Object.MatchPredicted).%OpenId(dynEntity.MatchId)
-    set match.LocalGoals = dynEntity.LocalGoals
-    set match.VisitorGoal = dynEntity.VisitorGoals
-    if (match.LocalGoals > match.VisitorGoals)
+
+    if (dynEntity.LocalGoals > dynEntity.VisitorGoals)
     {
-        set match.Result = 1
+        set dynEntity.Result = 1
     }
-    elseif (match.LocalGoals < match.VisitorGoals)
+    elseif (dynEntity.LocalGoals < dynEntity.VisitorGoals)
     {
-        set match.Result = 2
+        set dynEntity.Result = 2
     }
     else
     {
-        set match.Result = 0
+        set dynEntity.Result = 0
     }
-    set sc = match.%Save()
+    set sqlUpdateResult = "UPDATE QUINIELA_Object.MatchPredicted SET LocalGoals = ?, "_
+        "VisitorGoals = ?, "_
+        "Result = ? "_
+        "WHERE ID = ? "
+    set statementUpdateResult = ##class(%SQL.Statement).%New()
+    set statusUpdateResult = statementUpdateResult.%Prepare(sqlUpdateResult)
+    if ($$$ISOK(statusUpdateResult)) {
+        set resultSetUpdateResult = statementUpdateResult.%Execute(dynEntity.LocalGoals, dynEntity.VisitorGoals, dynEntity.Result, dynEntity.MatchId)
+        set sc = statusUpdateResult
+    }
+    else {
+        set sc = statusUpdateResult
+    }
+    set pResponse.Status = "Finished"
 
     Quit sc
 }
@@ -159,11 +169,11 @@ XData MessageMap
   <MapItem MessageType="QUINIELA.Message.MatchRequest">
     <Method>SaveMatch</Method>
   </MapItem>
-  <MapItem MessageType="QUINIELA.Message.OperationRequest">
-    <Method>GetMatches</Method>
-  </MapItem>
   <MapItem MessageType="QUINIELA.Message.ResultRequest">
     <Method>SaveResult</Method>
+  </MapItem>
+  <MapItem MessageType="QUINIELA.Message.OperationRequest">
+    <Method>GetMatches</Method>
   </MapItem>
 </MapItems>
 }

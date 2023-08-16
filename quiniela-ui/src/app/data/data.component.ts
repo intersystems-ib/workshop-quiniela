@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IrisService } from '../services/iris.service';
+import { Subscription, switchMap, timer } from 'rxjs';
 
 @Component({
   selector: 'app-data',
@@ -12,20 +13,27 @@ export class DataComponent {
   public totalDataRaw = 0;
   public totalDataPrepared = 0;
 
+  subscription !: Subscription;
+
   constructor(private irisService: IrisService) {
     
   }
 
   ngOnInit(): void {
-    this.irisService.getStatus("GetDataCount").subscribe({
-      next: res => { 
-        this.dataCount = JSON.parse(res.Result.replace("\\",""));
-        this.totalDataRaw = this.dataCount[0].count;
-        this.totalDataPrepared = this.dataCount[1].count;
-      },
-      error: err => {
-        console.error(JSON.stringify(err));
-      }
-    });
+
+    this.subscription = timer(0, 10000).pipe(switchMap(() => this.irisService.getStatus("GetDataCount"))).subscribe(res => {
+      this.dataCount = JSON.parse(res.Result.replace("\\",""));
+      this.totalDataRaw = this.dataCount[0].count;
+      this.totalDataPrepared = this.dataCount[1].count;       
+    }
+    );
+        
+  }
+
+  ngOnDestroy() {
+    if (this.subscription !== undefined)
+    {
+      this.subscription.unsubscribe();
+    }    
   }
 }

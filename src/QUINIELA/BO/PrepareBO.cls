@@ -13,7 +13,6 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
     set statementTruncateTrain = ##class(%SQL.Statement).%New()
     set statusTruncateTrain = statementTruncateTrain.%Prepare(sqlTruncateTrain)
     if ($$$ISOK(statusTruncateTrain)) {
-        $$$TRACE("Table truncated")
         set resultSetTruncateTrain = statementTruncateTrain.%Execute()
         if (resultSetTruncateTrain.%SQLCODE = 0) {
             set sqlMatchTrain = "INSERT INTO QUINIELA_Object.MatchTrain (Day, Division, Journey, LocalTeam, Referee, Result, VisitorTeam, IntDay) "_
@@ -34,7 +33,6 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
             set statementMatchTrain = ##class(%SQL.Statement).%New()
             set statusMatchTrain = statementMatchTrain.%Prepare(sqlMatchTrain)
             if ($$$ISOK(statusMatchTrain)) {
-                $$$TRACE("Initial insert done")
                 set resultSetMatchTrain = statementMatchTrain.%Execute()
                 if (resultSetMatchTrain.%SQLCODE = 0) {
                     set sqlUpdateLocalStreak = "UPDATE QUINIELA_Object.MatchTrain SET QUINIELA_Object.MatchTrain.LocalStreak = "_
@@ -49,7 +47,6 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
                     set statementUpdateLocalStreak = ##class(%SQL.Statement).%New()
                     set statusUpdateLocalStreak = statementUpdateLocalStreak.%Prepare(sqlUpdateLocalStreak)
                     if ($$$ISOK(statusUpdateLocalStreak)) {
-                        $$$TRACE("Local streak updated")
                         set resultSetUpdateLocalStreak = statementUpdateLocalStreak.%Execute()
                         if (resultSetUpdateLocalStreak.%SQLCODE = 0) {
                             set sqlUpdateVisitorStreak = "UPDATE QUINIELA_Object.MatchTrain SET QUINIELA_Object.MatchTrain.VisitorStreak = "_
@@ -64,7 +61,6 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
                             set statementUpdateVisitorStreak = ##class(%SQL.Statement).%New()
                             set statusUpdateVisitorStreak = statementUpdateVisitorStreak.%Prepare(sqlUpdateVisitorStreak)
                             if ($$$ISOK(statusUpdateVisitorStreak)) {
-                                $$$TRACE("Visitor streak updated")
                                 set resultSetUpdateVisitorStreak = statementUpdateVisitorStreak.%Execute()
                                 set sc = statusUpdateVisitorStreak
                             }

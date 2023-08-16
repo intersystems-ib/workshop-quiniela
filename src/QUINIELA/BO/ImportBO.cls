@@ -3,18 +3,52 @@ Class QUINIELA.BO.ImportBO Extends Ens.BusinessOperation
 
 Parameter INVOCATION = "Queue";
 
-Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUINIELA.Message.PrepareResponse) As %Status
+Method PrepareData(pRequest As QUINIELA.Message.OperationRequest, pResponse As QUINIELA.Message.OperationResponse) As %Status
 {
     Set sc = $$$OK
+    set pResponse = ##class(QUINIELA.Message.PrepareResponse).%New()
     set sqlTruncateRaw = "TRUNCATE TABLE QUINIELA_Object.RawMatch"
     set statementTruncateRaw = ##class(%SQL.Statement).%New()
     set statusTruncateRaw = statementTruncateRaw.%Prepare(sqlTruncateRaw)
     if ($$$ISOK(statusTruncateRaw)) {
         set resultSetTruncateRaw = statementTruncateRaw.%Execute()   
+        if ($$$ISOK(resultSetTruncateRaw)) {
+            set sqlTruncateTrain = "TRUNCATE TABLE QUINIELA_Object.MatchTrain"
+            set statementTruncateTrain = ##class(%SQL.Statement).%New()
+            set statusTruncateTrain = statementTruncateTrain.%Prepare(sqlTruncateTrain)
+            if ($$$ISOK(statusTruncateTrain)) {
+                set resultSetTruncateTrain = statementTruncateTrain.%Execute()  
+                if ($$$ISOK(resultSetTruncateTrain)) {
+                    set sqlTruncatePredicted = "TRUNCATE TABLE QUINIELA_Object.MatchPredicted"
+                    set statementTruncatePredicted = ##class(%SQL.Statement).%New()
+                    set statusTruncatePredicted = statementTruncatePredicted.%Prepare(sqlTruncatePredicted)
+                    if ($$$ISOK(statusTruncatePredicted)) {
+                        set resultSetTruncatePredicted = statementTruncatePredicted.%Execute()
+                        if ($$$ISOK(resultSetTruncatePredicted)) {
+                            set pResponse.Status = "Prepared"}
+                        else {
+                            set pResponse.Status = "Error truncating prepared data"
+                        }
+                    }
+                    else {
+                        set pResponse.Status = "Error truncating prepared data"
+                    }
+                }
+                else {
+                    set pResponse.Status = "Error truncating data for train"
+                }
+            }
+            else {
+                set pResponse.Status = "Error truncating data for train"
+            }
+        }
+        else {
+            set pResponse.Status = "Error truncating raw data"
+        }
     }
-    set sc = statusTruncateRaw
-    set pResponse = ##class(QUINIELA.Message.PrepareResponse).%New()
-    set pResponse.Status = "Prepared"
+    else {
+        set pResponse.Status = "Error truncating raw data"
+    }
     set pResponse.Operation = pRequest.Operation
     Return sc
 }
@@ -23,7 +57,7 @@ Method ImportData(pRequest As QUINIELA.Message.ImportRequest, pResponse As QUINI
 {
     Set sc = $$$OK
     set pResponse = ##class(QUINIELA.Message.ImportResponse).%New()
-    set pResponse.Status = "In process"
+    set pResponse.Status = "In Process"
     set pResponse.Operation = pRequest.Operation
     set sc = pResponse.%Save()
 

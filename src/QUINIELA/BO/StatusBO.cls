@@ -78,22 +78,23 @@ Method GetDataCount(pRequest As QUINIELA.Message.OperationRequest, pResponse As 
     set pResponse = ##class(QUINIELA.Message.DictionaryRefereeResponse).%New()
     set pResponse.Operation = pRequest.Operation
     
-    set refereeArray = ##class(%DynamicArray).%New()
-    set sqlReferee = "SELECT 'RawData', count(*) As RawData FROM QUINIELA_Object.RawMatch UNION SELECT 'TrainedData', count(*) As PreparedData FROM QUINIELA_Object.MatchTrain"
-    set statementReferee = ##class(%SQL.Statement).%New(), statementReferee.%ObjectSelectMode = 1
-    set statusReferee = statementReferee.%Prepare(sqlReferee)
-    if ($$$ISOK(statusReferee)) {
-        set resultSetReferee = statementReferee.%Execute()
-        if (resultSetReferee.%SQLCODE = 0) {
-            while (resultSetReferee.%Next() '= 0) {
-                do refereeArray.%Push({"type":(resultSetReferee.%GetData(1)), "count": (resultSetReferee.%GetData(2))})
+    set dataCountArray = ##class(%DynamicArray).%New()
+    set sqlDataCount = "SELECT 'RawData', count(*) As RawData FROM QUINIELA_Object.RawMatch "_
+        "UNION SELECT 'TrainedData', count(*) As PreparedData FROM QUINIELA_Object.MatchTrain"
+    set statementDataCount = ##class(%SQL.Statement).%New(), statementDataCount.%ObjectSelectMode = 1
+    set statusDataCount = statementDataCount.%Prepare(sqlDataCount)
+    if ($$$ISOK(statusDataCount)) {
+        set resultSetDataCount = statementDataCount.%Execute()
+        if (resultSetDataCount.%SQLCODE = 0) {
+            while (resultSetDataCount.%Next() '= 0) {
+                do dataCountArray.%Push({"type":(resultSetDataCount.%GetData(1)), "count": (resultSetDataCount.%GetData(2))})
             }            
             set pResponse.Status = "Finished" 
-            set pResponse.Result = refereeArray.%ToJSON()
+            set pResponse.Result = dataCountArray.%ToJSON()
         }
     }
     else {
-        set sc = statusReferee
+        set sc = statusDataCount
         set pResponse.Status = "Error" 
     }
     return sc

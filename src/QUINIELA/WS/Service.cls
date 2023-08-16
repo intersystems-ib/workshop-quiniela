@@ -62,7 +62,7 @@ ClassMethod ImportRawMatches() As %DynamicObject
         
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
        	set response = ##class(QUINIELA.Message.ImportResponse).%New()
-        set response.Status = "In process"
+        set response.Status = "In Process"
         set response.Operation = "Import"
         set status = instance.SendRequestAsync("QUINIELA.BP.ImportBPL", newRequest, .response)
         
@@ -131,12 +131,12 @@ ClassMethod PrepareData() As %DynamicObject
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         
-        set newRequest = ##class(QUINIELA.Message.OperationRequest).%New()
+        set newRequest = ##class(QUINIELA.Message.PrepareRequest).%New()
         set newRequest.Operation = "Prepare"
 
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
         set response = ##class(QUINIELA.Message.PrepareResponse).%New()
-        set response.Status = "In process"
+        set response.Status = "In Process"
         set response.Operation = "Prepare"
 
         set status = instance.SendRequestAsync("QUINIELA.BP.PrepareBP", newRequest, .response)
@@ -158,13 +158,13 @@ ClassMethod TrainData() As %DynamicObject
         Do ##class(%REST.Impl).%SetContentType("application/json")
         If '##class(%REST.Impl).%CheckAccepts("application/json") Do ##class(%REST.Impl).%ReportRESTError(..#HTTP406NOTACCEPTABLE,$$$ERROR($$$RESTBadAccepts)) Quit
         
-        set newRequest = ##class(QUINIELA.Message.OperationRequest).%New()
+        set newRequest = ##class(QUINIELA.Message.TrainRequest).%New()
         set newRequest.Operation = "Train"
 
         set status = ##class(Ens.Director).CreateBusinessService("QUINIELA.BS.FromWSBS", .instance)
         
         set response = ##class(QUINIELA.Message.TrainResponse).%New()
-        set response.Status = "In process"
+        set response.Status = "In Process"
         set response.Operation = "Train"
 
         set status = instance.SendRequestAsync("QUINIELA.BP.TrainBP", newRequest, .response)
@@ -273,7 +273,7 @@ ClassMethod SaveResult() As %Status
 
         #Dim resultSaveRequest As QUINIELA.Message.ResultRequest
         set resultSaveRequest = ##class(QUINIELA.Message.ResultRequest).%New()
-        set resultSaveRequest.Operation = "Save Result"
+        set resultSaveRequest.Operation = "SaveResult"
         set resultSaveRequest.JSON = bodyJson
 
         Set tSC = instance.SendRequestSync("QUINIELA.BO.MatchBO", resultSaveRequest, .response)
