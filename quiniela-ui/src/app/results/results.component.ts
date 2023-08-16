@@ -55,6 +55,7 @@ export class ResultsComponent {
   deleteMatch(matchId: number): void {
     this.irisService.deleteMatch(matchId).subscribe({
       next: res => {  
+        this.getMatches();
       },
       error: err => {
         console.error(JSON.stringify(err));

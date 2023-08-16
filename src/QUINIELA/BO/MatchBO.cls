@@ -179,9 +179,10 @@ Method DeleteResult(pRequest As QUINIELA.Message.DeleteRequest, Output pResponse
         set sc = resultSetDeleteResult
     }
     else {
-        set sc = resultSetDeleteResult
+        set sc = statusDeleteResult
     }
     set pResponse.Status = "Finished"
+    set pResponse.Result = sc
 
     Quit sc
 }
@@ -195,11 +196,11 @@ XData MessageMap
   <MapItem MessageType="QUINIELA.Message.ResultRequest">
     <Method>SaveResult</Method>
   </MapItem>
-  <MapItem MessageType="QUINIELA.Message.OperationRequest">
-    <Method>GetMatches</Method>
-  </MapItem>
   <MapItem MessageType="QUINIELA.Message.DeleteRequest">
     <Method>DeleteResult</Method>
+  </MapItem>
+  <MapItem MessageType="QUINIELA.Message.OperationRequest">
+    <Method>GetMatches</Method>
   </MapItem>
 </MapItems>
 }
