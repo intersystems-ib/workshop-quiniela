@@ -61,7 +61,7 @@ Method ImportData(pRequest As QUINIELA.Message.ImportRequest, pResponse As QUINI
     set pResponse.Operation = pRequest.Operation
     set sc = pResponse.%Save()
 
-    if (pRequest.Operation = "Import")
+    if (pRequest.Operation = "First")
     {
       set sc = ..ImportFromWeb("1")
     }

@@ -53,11 +53,11 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
             if ($$$ISOK(statusUpdateVisitorStreak)) {
                 set resultSetUpdateVisitorStreak = statementUpdateVisitorStreak.%Execute(newMatch.%Id())
                 if (resultSetUpdateVisitorStreak.%SQLCODE = 0) {
-                    set sqlPredict = "UPDATE QUINIELA_Object.MatchPredicted mp set mp.PredictedResult = (SELECT PREDICT(QuinielaModel) AS PredictedResult, "_
-                    "mp.Probability1 = ROUND(PROBABILITY(QuinielaModel FOR '1')*100,2), "_
-                    "mp.ProbabilityX = ROUND(PROBABILITY(QuinielaModel FOR '0')*100,2), "_
-                    "mp.Probability2 = ROUND(PROBABILITY(QuinielaModel FOR '2')*100,2) "_
-                    "FROM QUINIELA_Object.MatchPredicted mpr WHERE mpr.%Id = mp.%Id) WHERE mp.%Id = ?"
+                    set sqlPredict = "UPDATE QUINIELA_Object.MatchPredicted mp set mp.PredictedResult = (SELECT PREDICT(QuinielaModel) AS PredictedResult FROM QUINIELA_Object.MatchPredicted mpr WHERE mpr.%Id = mp.%Id), "_
+                        "mp.Probability1 = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '1')*100,2) FROM QUINIELA_Object.MatchPredicted mpr1 WHERE mpr1.%Id = mp.%Id), "_
+                        "mp.ProbabilityX = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '0')*100,2) FROM QUINIELA_Object.MatchPredicted mprX WHERE mprX.%Id = mp.%Id), "_
+                        "mp.Probability2 = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '2')*100,2) FROM QUINIELA_Object.MatchPredicted mpr2 WHERE mpr2.%Id = mp.%Id) "_
+                        "WHERE mp.%Id = ?"
                     set statementPredict = ##class(%SQL.Statement).%New(), statementPredict.%ObjectSelectMode = 1
                     set statusPredict = statementPredict.%Prepare(sqlPredict)
                     if ($$$ISOK(statusPredict)) {                        
