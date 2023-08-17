@@ -42,4 +42,6 @@ set sc = $SYSTEM.OBJ.LoadDir("/opt/irisapp/src/QUINIELA", "ck", , 1) \
 set production = "QUINIELA.Production" \
 set ^Ens.Configuration("csp","LastProduction") = production \
 do ##class(Ens.Director).SetAutoStart(production) \
-set sc = 1 
+set sc = 1 \ 
+zn "%SYS" \
+do ##class(Security.Applications).Import("/webapp.xml",.n) \

@@ -177,15 +177,16 @@ ClassMethod ImportFromWeb(division As %String) As %String [ Language = python ]
                                   case 1:
                                       matchObject.LocalTeam = specificMatch.contents[0].text
                                   case 2:
-                                      matchObject.GoalsLocal = specificMatch.div.a.contents[0].text
-                                      matchObject.GoalsVisitor = specificMatch.div.a.contents[1].text
+                                      if specificMatch.div is not None and specificMatch.div.a is not None and specificMatch.div.a.contents is not None and len(specificMatch.div.a.contents) > 1:
+                                        matchObject.GoalsLocal = specificMatch.div.a.contents[0].text
+                                        matchObject.GoalsVisitor = specificMatch.div.a.contents[1].text
                                   case 3:
                                       matchObject.VisitorTeam = specificMatch.contents[0].text
                                   case 5:
                                       matchObject.Referee = specificMatch.contents[0].text
                               matchObject.Division = division                                    
                               count = count + 1
-                      if (matchObject.Day != ''):
+                      if (matchObject.Day != '' and matchObject.GoalsLocal != '' and matchObject.GoalsVisitor != ''):
                           status = matchObject._Save()
           except requests.exceptions.ConnectionError as exc:
               print(exc)

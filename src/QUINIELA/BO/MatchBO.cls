@@ -53,7 +53,11 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
             if ($$$ISOK(statusUpdateVisitorStreak)) {
                 set resultSetUpdateVisitorStreak = statementUpdateVisitorStreak.%Execute(newMatch.%Id())
                 if (resultSetUpdateVisitorStreak.%SQLCODE = 0) {
-                    set sqlPredict = "UPDATE QUINIELA_Object.MatchPredicted mp set mp.PredictedResult = (SELECT PREDICT(QuinielaModel) AS PredictedResult FROM QUINIELA_Object.MatchPredicted mpr WHERE mpr.%Id = mp.%Id) WHERE mp.%Id = ?"
+                    set sqlPredict = "UPDATE QUINIELA_Object.MatchPredicted mp set mp.PredictedResult = (SELECT PREDICT(QuinielaModel) AS PredictedResult, "_
+                    "mp.Probability1 = ROUND(PROBABILITY(QuinielaModel FOR '1')*100,2), "_
+                    "mp.ProbabilityX = ROUND(PROBABILITY(QuinielaModel FOR '0')*100,2), "_
+                    "mp.Probability2 = ROUND(PROBABILITY(QuinielaModel FOR '2')*100,2) "_
+                    "FROM QUINIELA_Object.MatchPredicted mpr WHERE mpr.%Id = mp.%Id) WHERE mp.%Id = ?"
                     set statementPredict = ##class(%SQL.Statement).%New(), statementPredict.%ObjectSelectMode = 1
                     set statusPredict = statementPredict.%Prepare(sqlPredict)
                     if ($$$ISOK(statusPredict)) {                        
@@ -89,9 +93,9 @@ Method GetMatches(pRequest As QUINIELA.Message.OperationRequest, Output pRespons
     set refereeArray = ##class(%DynamicArray).%New()
     set sqlMatches = "SELECT top 21 mp.Id, Day, Division, Journey, "_
         "lt.Name, vt.Name, CASE WHEN PredictedResult = 0 THEN 'X' ELSE PredictedResult END, "_
-        "ROUND(PROBABILITY(QuinielaModel FOR '1')*100,2), "_
-        "ROUND(PROBABILITY(QuinielaModel FOR '0')*100,2), "_
-        "ROUND(PROBABILITY(QuinielaModel FOR '2')*100,2), "_
+        "Probability1, "_
+        "ProbabilityX, "_
+        "Probability2, "_
         "mp.LocalGoals, "_
         "mp.VisitorGoals, "_
         "mp.Result "_

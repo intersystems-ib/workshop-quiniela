@@ -1,7 +1,0 @@
-SELECT SUM(CASE WHEN IsVictory = 1 THEN 4-%VID ELSE 0 END) FROM 
-(SELECT 
-TOP 3 TO_DATE(Day,'DD/MM/YYYY') AS DayTransformed,
-CASE WHEN CAST(GoalsLocal As INTEGER) >  CAST(GoalsVisitor As INTEGER) THEN 1 ELSE 0 END AS IsVictory
-FROM QUINIELA_Object.RawMatch 
-WHERE LocalTeam = 'Madrid'
-ORDER BY DayTransformed DESC)

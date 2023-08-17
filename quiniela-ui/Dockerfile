@@ -1,18 +1,10 @@
-FROM node:18.10-alpine AS build
+FROM node:18.10-alpine AS builder
 
-RUN mkdir -p /app
-
+USER root
 WORKDIR /app
-
-COPY package.json /app
+COPY /quiniela-ui .
 
 RUN npm install
-
-COPY . /app
-
 RUN npm run build
 
-# Serve Application using Nginx Server
-FROM nginx:1.17.10-alpine
-EXPOSE 80
-COPY --from=build /app/dist/quiniela-ui/ /usr/share/nginx/html
+CMD ["npm", "start", "--", "--host", "0.0.0.0", "--poll", "500"]
