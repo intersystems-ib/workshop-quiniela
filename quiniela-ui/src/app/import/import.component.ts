@@ -54,6 +54,7 @@ export class ImportComponent {
         }
         else {
           this.loading = true;
+          this.launchImport();
         }         
       },
       error: err => {

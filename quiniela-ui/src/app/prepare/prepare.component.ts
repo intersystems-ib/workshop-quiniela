@@ -56,6 +56,7 @@ export class PrepareComponent {
         }  
         else {
           this.loading = true;
+          this.launchPreparation();
         }       
       },
       error: err => {

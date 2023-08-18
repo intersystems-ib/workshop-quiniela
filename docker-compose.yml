@@ -1,14 +1,5 @@
 version: "3.1"
 services:  
-  # angular
-  angular:
-    init: true
-    container_name: quiniela-ui
-    build:
-      context: .
-      dockerfile: quiniela-ui/Dockerfile
-    ports:
-      - 4200:4200
     
   # iris
   iris:
@@ -24,3 +15,15 @@ services:
     environment:
     - ISC_DATA_DIRECTORY=/shared/durable
     command: --check-caps false
+
+# angular
+  angular:
+    init: true
+    container_name: quiniela-ui
+    build:
+      context: .
+      dockerfile: quiniela-ui/Dockerfile
+    ports:
+      - 4200:4200
+    depends_on:
+      - iris

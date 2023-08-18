@@ -14,8 +14,8 @@
     <InbndWebServicesEnabled>true</InbndWebServicesEnabled>
     <IsNameSpaceDefault>false</IsNameSpaceDefault>
     <JWTAuthEnabled>true</JWTAuthEnabled>
-    <JWTAccessTokenTimeout>3600</JWTAccessTokenTimeout>
-    <JWTRefreshTokenTimeout>900</JWTRefreshTokenTimeout>
+    <JWTAccessTokenTimeout>36000</JWTAccessTokenTimeout>
+    <JWTRefreshTokenTimeout>9000</JWTRefreshTokenTimeout>
     <LockCSPName>true</LockCSPName>
     <MatchRoles>
       <MatchRolesItem>:%All</MatchRolesItem>
@@ -25,8 +25,8 @@
     <Recurse>true</Recurse>
     <RedirectEmptyPath>false</RedirectEmptyPath>
     <ServeFiles>1</ServeFiles>
-    <ServeFilesTimeout>3600</ServeFilesTimeout>
-    <Timeout>900</Timeout>
+    <ServeFilesTimeout>36000</ServeFilesTimeout>
+    <Timeout>9000</Timeout>
     <TwoFactorEnabled>false</TwoFactorEnabled>
     <Type>2</Type>
     <UseCookies>2</UseCookies>

@@ -54,6 +54,7 @@ export class TrainComponent {
         }      
         else {
           this.loading = true;
+          this.launchTraining();
         }   
       },
       error: err => {
