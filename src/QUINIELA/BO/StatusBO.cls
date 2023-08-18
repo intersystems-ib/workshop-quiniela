@@ -80,7 +80,9 @@ Method GetDataCount(pRequest As QUINIELA.Message.OperationRequest, pResponse As 
     
     set dataCountArray = ##class(%DynamicArray).%New()
     set sqlDataCount = "SELECT 'RawData', count(*) As RawData FROM QUINIELA_Object.RawMatch "_
-        "UNION SELECT 'TrainedData', count(*) As PreparedData FROM QUINIELA_Object.MatchTrain"
+        "UNION SELECT 'TrainedData', count(*) As PreparedData FROM QUINIELA_Object.MatchTrain "_
+        "UNION SELECT 'ModelCreated', count(*) FROM INFORMATION_SCHEMA.ML_MODELS WHERE MODEL_NAME = 'QuinielaModel' "_
+        "UNION SELECT 'ModelTrained', count(*) FROM INFORMATION_SCHEMA.ML_TRAINED_MODELS WHERE MODEL_NAME = 'QuinielaModel'"
     set statementDataCount = ##class(%SQL.Statement).%New(), statementDataCount.%ObjectSelectMode = 1
     set statusDataCount = statementDataCount.%Prepare(sqlDataCount)
     if ($$$ISOK(statusDataCount)) {

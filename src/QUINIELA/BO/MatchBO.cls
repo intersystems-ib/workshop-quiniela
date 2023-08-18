@@ -98,7 +98,7 @@ Method GetMatches(pRequest As QUINIELA.Message.OperationRequest, Output pRespons
         "Probability2, "_
         "mp.LocalGoals, "_
         "mp.VisitorGoals, "_
-        "mp.Result "_
+        "CASE WHEN mp.Result = 0 THEN 'X' ELSE mp.Result END "_
         "FROM QUINIELA_Object.MatchPredicted mp LEFT JOIN QUINIELA_Object.Team lt on mp.LocalTeam = lt.Id "_
         "LEFT JOIN QUINIELA_Object.Team vt on mp.VisitorTeam = vt.Id "_
         "WHERE mp.Division = ? "_

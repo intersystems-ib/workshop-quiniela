@@ -1,33 +1,67 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-    <h1 class="h2">Data management </h1>
+    <h3 class="h3">Data management </h3>
 </div>
 <div class="row">
-    <div class="col ml-10 mr-10 mt-2 mb-2">
+    <div class="col-3 justify-content-center align-items-center" style="display: flex;">
         <div class="card" style="width: 18rem;">
             <img src="/assets/images/import.jpg" class="card-img-top" alt="Import data">
             <div class="card-body">
-              <h5 class="card-title">Data import</h5>
-              <p class="card-text">This option will read the data of the matches from the original web page and save it into IRIS.</p>
-              <app-import></app-import>
+                <h5 class="card-title">Data import</h5>
+                <p class="card-text">
+                    <span>
+                        This option will read the data of the matches from the original web page and save it into IRIS.
+                    </span>
+                    <br/>
+                    <span>
+                        Matches imported: <b>{{totalDataRaw}}</b>
+                    </span>
+                </p>
+                <app-import></app-import>
             </div>
         </div>
     </div>
-    <div class="col ml-10 mr-10 mt-2 mb-2">
+    <div class="col-1 justify-content-center align-items-center" style="display: flex;">
+        <img src="/assets/images/right-arrow.png">
+    </div>
+    <div class="col-3 justify-content-center align-items-center" style="display: flex;">
         <div class="card" style="width: 18rem;">
             <img src="/assets/images/prepare.jpg" class="card-img-top" alt="Import data">
             <div class="card-body">
-              <h5 class="card-title">Data preparation</h5>
-              <p class="card-text">From this option the data of the matches will be transformed and prepared to be used by our model.</p>
+                <h5 class="card-title">Data preparation</h5>
+                <p class="card-text">
+                    <span>
+                        To transform and prepare the data of the matches in order to be used by our model.
+                    </span>
+                    <br/>
+                    <span>
+                        Matches prepared: <b>{{totalDataPrepared}}</b>
+                    </span>
+                </p>
               <app-prepare [totalData]="totalDataRaw"></app-prepare>
             </div>
         </div>
     </div>
-    <div class="col ml-10 mr-10 mt-2 mb-2">
+    <div class="col-1 justify-content-center align-items-center" style="display: flex;">
+        <img src="/assets/images/right-arrow.png">
+    </div>
+    <div class="col-3 justify-content-center align-items-center" style="display: flex;">
         <div class="card" style="width: 18rem;">
             <img src="/assets/images/train.jpg" class="card-img-top" alt="Import data">
             <div class="card-body">
-              <h5 class="card-title">Model training</h5>
-              <p class="card-text">This option will create and train a model with the prepared data saved into IRIS.</p>
+                <h5 class="card-title">Model training</h5>
+                <p class="card-text">
+                    <span>
+                        This option will create and train a model with the prepared data saved into IRIS.
+                    </span>
+                    <br/>
+                    <span>
+                        Model created: <b>{{totalOfModelsCreated == 1? 'Yes':'No'}}</b>
+                    </span>
+                    <br/>
+                    <span>
+                        Model trained: <b>{{totalOfModelsTrained == 1? 'Yes':'No'}}</b>
+                    </span>
+                </p>
               <app-train [totalData]="totalDataPrepared"></app-train>
             </div>
         </div>
