@@ -114,7 +114,7 @@ Method CreateDictionaryTeam(pRequest As QUINIELA.Message.DictionaryTeamRequest, 
     if ($$$ISOK(statusTruncateTeam)) {
         set resultSetTruncateTeam = statementTruncateTeam.%Execute()
         if (resultSetTruncateTeam.%SQLCODE = 0) {
-            set sqlInsertTeam = "INSERT INTO QUINIELA_Object.Team (Name) SELECT DISTINCT(LocalTeam) FROM QUINIELA_Object.RawMatch"
+            set sqlInsertTeam = "INSERT INTO QUINIELA_Object.Team (Name) SELECT DISTINCT(SELECT DISTINCT(LocalTeam) FROM QUINIELA_Object.RawMatch UNION SELECT DISTINCT(VisitorTeam) FROM QUINIELA_Object.RawMatch) "
             set statementInsertTeam = ##class(%SQL.Statement).%New()
             set statusInsertTeam = statementInsertTeam.%Prepare(sqlInsertTeam)
             if ($$$ISOK(statusInsertTeam)) {

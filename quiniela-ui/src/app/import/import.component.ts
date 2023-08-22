@@ -30,7 +30,7 @@ export class ImportComponent {
         this.subscription = timer(0, 5000).pipe(
           switchMap(() => this.irisService.getStatus("CheckImport"))
         ).subscribe(result => {
-          if (result.Status !== "In Process"){
+          if (result.Status !== "In Process" && result.Status !== undefined){
             this.loading = false;
             this.status = "";
             this.subscription.unsubscribe();
