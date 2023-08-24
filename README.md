@@ -59,17 +59,17 @@ Automatically an IRIS instance will be deployed and a production will be configu
 
 Now you can check the frontend:
 * Open the main page from this [URL](http://localhost:4200).
-  ![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/login.PNG)
+  ![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/login.png)
 
 * Login using `superuser` / `SYS` account.
 * Click on the icon on the upper left of the screen and check the options of the menu.
-  ![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/menu.PNG)
+  ![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/menu.png)
 
 * Click on Data management and follow the arrows: Launch import -> Launch preparation -> Launch training. Wait for the end of each step.
 * Now open the Menu again and click on Result prediction.
 * You can add all the matches and see the prediction.
-![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/import.PNG)
+![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/import.png)
 * You can keep the data updated adding the real result clicking on the match and introducing the result:
-![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/predict.PNG)
+![image](https://github.com/intersystems-ib/workshop-quiniela/blob/main/assets/predict.png)
 
 

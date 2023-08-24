@@ -25,7 +25,19 @@ Method PrepareData(pRequest As QUINIELA.Message.OperationRequest, pResponse As Q
                     if ($$$ISOK(statusTruncatePredicted)) {
                         set resultSetTruncatePredicted = statementTruncatePredicted.%Execute()
                         if ($$$ISOK(resultSetTruncatePredicted)) {
-                            set pResponse.Status = "Prepared"}
+                            set sqlDrop = "DROP MODEL QuinielaModel"
+                            set statementDrop = ##class(%SQL.Statement).%New()
+                            set statusDrop = statementDrop.%Prepare(sqlDrop)
+                            if ($$$ISOK(statusDrop)) {
+                                set resultSetDrop = statementDrop.%Execute()
+                                if (resultSetDrop.%SQLCODE = 0) {
+                                    set tSC = statusDrop  
+                                    set pResponse.Status = "Prepared"}                                                              
+                                }
+                                else {
+                                    set pResponse.Status = "Error dropping model"        
+                                }
+                        }
                         else {
                             set pResponse.Status = "Error truncating prepared data"
                         }
