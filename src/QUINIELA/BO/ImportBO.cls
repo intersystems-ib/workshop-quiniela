@@ -25,18 +25,39 @@ Method PrepareData(pRequest As QUINIELA.Message.OperationRequest, pResponse As Q
                     if ($$$ISOK(statusTruncatePredicted)) {
                         set resultSetTruncatePredicted = statementTruncatePredicted.%Execute()
                         if ($$$ISOK(resultSetTruncatePredicted)) {
-                            set sqlDrop = "DROP MODEL QuinielaModel"
-                            set statementDrop = ##class(%SQL.Statement).%New()
-                            set statusDrop = statementDrop.%Prepare(sqlDrop)
-                            if ($$$ISOK(statusDrop)) {
-                                set resultSetDrop = statementDrop.%Execute()
-                                if (resultSetDrop.%SQLCODE = 0) {
-                                    set tSC = statusDrop  
-                                    set pResponse.Status = "Prepared"}                                                              
+                            set sql = "SELECT MODEL_NAME FROM INFORMATION_SCHEMA.ML_MODELS WHERE MODEL_NAME = 'QuinielaModel'"
+                            set statement = ##class(%SQL.Statement).%New()
+                            set status = statement.%Prepare(sql)
+                            if ($$$ISOK(status)) {
+                                set resultSet = statement.%Execute()
+                                if (resultSet.%SQLCODE = 0) {
+                                    set count = 0
+                                    while (resultSet.%Next() '= 0) {
+                                        set count = count + 1 
+                                        if (resultSet.%GetData(1) '= "") {
+                                            set sqlDrop = "DROP MODEL QuinielaModel"
+                                            set statementDrop = ##class(%SQL.Statement).%New()
+                                            set statusDrop = statementDrop.%Prepare(sqlDrop)
+                                            if ($$$ISOK(statusDrop)) {
+                                                set resultSetDrop = statementDrop.%Execute()
+                                                if (resultSetDrop.%SQLCODE = 0) {
+                                                    set tSC = statusDrop   
+                                                    set pResponse.Status = "Prepared"                                                             
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (count = 0) {
+                                        set pResponse.Status = "Prepared"
+                                    }
                                 }
                                 else {
-                                    set pResponse.Status = "Error dropping model"        
-                                }
+                                    set pResponse.Status = "Prepared"
+                                }          
+                            }
+                            else {
+                                set pResponse.Status = "Prepared"
+                            }
                         }
                         else {
                             set pResponse.Status = "Error truncating prepared data"
