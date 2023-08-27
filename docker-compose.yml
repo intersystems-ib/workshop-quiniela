@@ -15,7 +15,7 @@ services:
     - ./shared:/shared
     environment:
     - ISC_DATA_DIRECTORY=/shared/durable
-    command: --check-caps false
+    command: --check-caps false --ISCAgent false
 
 # angular
   angular:
