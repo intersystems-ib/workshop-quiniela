@@ -10,6 +10,7 @@ services:
       dockerfile: iris/Dockerfile
     ports:
       - 52774:52773
+      - 51774:1972
     volumes:
     - ./shared:/shared
     environment:
