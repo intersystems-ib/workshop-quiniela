@@ -5,10 +5,10 @@ Class QUINIELA.Object.MatchTrain Extends (%Persistent, %JSON.Adaptor) [ DdlAllow
 Property Day As %Date;
 
 /// Local Team
-Property LocalTeam As %Integer;
+Property LocalTeam As %String;
 
 /// Visitor Team
-Property VisitorTeam As %Integer;
+Property VisitorTeam As %String;
 
 /// Local Streak
 Property LocalStreak As %Integer;
@@ -17,16 +17,16 @@ Property LocalStreak As %Integer;
 Property VisitorStreak As %Integer;
 
 /// Referee
-Property Referee As %Integer;
+Property Referee As %String;
 
 /// Result
-Property Result As %Integer;
+Property Result As %String;
 
 /// Division
-Property Division As %Integer;
+Property Division As %String;
 
 /// Journey
-Property Journey As %Integer;
+Property Journey As %String;
 
 /// Integer day
 Property IntDay As %Integer;

@@ -2,7 +2,7 @@ Class QUINIELA.Object.MatchPredicted Extends QUINIELA.Object.MatchTrain
 {
 
 /// Result
-Property PredictedResult As %Integer;
+Property PredictedResult As %String;
 
 Property LocalGoals As %Integer;
 
