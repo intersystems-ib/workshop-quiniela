@@ -62,6 +62,7 @@ Method CreateAndTrainModel(pRequest As QUINIELA.Message.TrainRequest, pResponse 
                 set sqlValidate = "VALIDATE MODEL QuinielaModel FROM QUINIELA_Object.MatchTrain"                                
                 set statementValidate = ##class(%SQL.Statement).%New()
                 set statusValidate = statementValidate.%Prepare(sqlValidate)
+                set resultSetValidate = statementValidate.%Execute()
                 set tSC = statusValidate                                    
             }
         }
