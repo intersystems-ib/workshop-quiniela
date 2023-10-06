@@ -22,7 +22,7 @@
                 <td>{{match.local}}</td>
                 <td>{{match.visitor}}</td>
                 <td>{{match.result}}</td>
-                <td [ngClass]="{'fail': match.result !== '' && (match.predictedResult - 0) !== match.result, 'match': (match.predictedResult - 0) === match.result}">{{match.predictedResult}}</td>
+                <td [ngClass]="{'fail': match.result != '' && match.predictedResult != match.result, 'match': match.predictedResult == match.result}">{{match.predictedResult}}</td>
                 <td>{{match.probability1}} %</td>
                 <td>{{match.probabilityX}} %</td>
                 <td>{{match.probability2}} %</td>
