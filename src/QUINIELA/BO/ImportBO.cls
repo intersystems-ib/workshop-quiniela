@@ -98,9 +98,21 @@ Method ImportData(pRequest As QUINIELA.Message.ImportRequest, pResponse As QUINI
     {
       set sc = ..ImportFromWeb("1")
     }
-    else
+    elseif (pRequest.Operation = "Second")
     {
       set sc = ..ImportFromWeb("2")
+    }
+    elseif (pRequest.Operation = "Primeira")
+    {
+      set sc = ..ImportFromWeb("Primeira")
+    }
+    elseif (pRequest.Operation = "Premier")
+    {
+      set sc = ..ImportFromWeb("Premier")
+    }
+    elseif (pRequest.Operation = "SerieA")
+    {
+      set sc = ..ImportFromWeb("SerieA")
     }
     set pResponse.Status = "Finished"
     Return sc

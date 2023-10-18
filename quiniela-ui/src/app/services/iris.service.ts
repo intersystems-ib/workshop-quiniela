@@ -63,7 +63,7 @@ export class IrisService {
     )
   }
 
-  getMatches(division: number): Observable<any> {
+  getMatches(division: String): Observable<any> {
     return this.http.get<Response>(
       IRIS_API + 'getMatches/' + division, httpOptions
     )

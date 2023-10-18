@@ -10,7 +10,7 @@ import { FormBuilder, FormControl, FormGroup, UntypedFormControl, UntypedFormGro
 })
 export class MatchComponent {
 
-  @Output() newMatchEvent = new EventEmitter<string>();
+  @Output() newMatchEvent = new EventEmitter<any>();
 
   public referees: Array<String> = [];
   public teams: Array<String> = [];
@@ -86,6 +86,7 @@ export class MatchComponent {
 
   onSubmit(): void {
     
+    this.newMatchEvent.emit({division: ''});
     const matchData = {
       "Journey": this.journey?.value, 
       "LocalTeam": this.localTeam?.value, 
@@ -95,8 +96,13 @@ export class MatchComponent {
       "Referee":this.referee?.value
     };
     
-    this.irisService.saveMatch(matchData).subscribe({next: res => {  
-      this.newMatchEvent.emit(res);
+    this.irisService.saveMatch(matchData).subscribe({next: res => {
+      if (res.Status == "Finished"){
+        this.newMatchEvent.emit({division: this.division?.value});
+        this.matchForm.get("VisitorTeam")?.setValue("");
+        this.matchForm.get("LocalTeam")?.setValue("");
+        this.matchForm.get("Referee")?.setValue("");
+      }      
     },
     error: err => {
       console.error(JSON.stringify(err));

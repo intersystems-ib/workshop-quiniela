@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { IrisService } from '../services/iris.service';
 import { UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -8,9 +8,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss']
 })
-export class ResultsComponent {
+export class ResultsComponent implements OnChanges{
 
-  @Input() division: number = 1;
+  @Input() division: String = "1";
+
   public matches: Array<any> = []
   public modalMatchTitle: String = "";
   public resultForm = new UntypedFormGroup({
@@ -36,6 +37,10 @@ export class ResultsComponent {
 			},
 		);
 	}
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.getMatches();
+  }
 
   ngOnInit(): void {
     this.getMatches();

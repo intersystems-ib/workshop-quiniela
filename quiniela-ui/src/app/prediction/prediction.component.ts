@@ -7,14 +7,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./prediction.component.scss']
 })
 export class PredictionComponent {
+  
+  public selectedDivision: String = "1";
 
   constructor(private router: Router) { }
 
-  refreshResults() {
-    const currentRoute = this.router.url;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([currentRoute]);
-  }); 
+  refreshResults(value: any) {
+    this.selectedDivision = value.division;
+  }
+
+  updateDivision(division: String) {
+    this.selectedDivision = division;
   }
 
 }
