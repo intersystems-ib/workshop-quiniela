@@ -31,6 +31,12 @@ Property Journey As %String;
 /// Integer day
 Property IntDay As %Integer;
 
+/// Local Points
+Property LocalPoints As %Integer;
+
+/// Visitor Streak
+Property VisitorPoints As %Integer;
+
 // Index LocalStreakIDX On (LocalTeam, IntDay);
 
 // Index VisitorStreakIDX On (VisitorTeam, IntDay);
@@ -70,6 +76,12 @@ Storage Default
 </Value>
 <Value name="11">
 <Value>IntDay</Value>
+</Value>
+<Value name="12">
+<Value>LocalPoints</Value>
+</Value>
+<Value name="13">
+<Value>VisitorPoints</Value>
 </Value>
 </Data>
 <DataLocation>^QUINIELA.Object.MatchTrainD</DataLocation>
