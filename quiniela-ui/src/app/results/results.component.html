@@ -3,7 +3,6 @@
         <thead>
             <tr style="text-align: center;">
                 <th scope="col">Day</th>
-                <th scope="col">Division</th>
                 <th scope="col">Round</th>
                 <th scope="col">Home</th>
                 <th scope="col">Away</th>
@@ -17,7 +16,6 @@
         <tbody>
             <tr style="text-align: center;" *ngFor="let match of matches" (click)="open(content, match)">
                 <td>{{match.day}}</td>
-                <td>{{match.division}}</td>
                 <td>{{match.journey}}</td>
                 <td>{{match.local}}</td>
                 <td>{{match.visitor}}</td>

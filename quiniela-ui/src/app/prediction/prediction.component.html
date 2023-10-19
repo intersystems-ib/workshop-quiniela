@@ -20,6 +20,16 @@
     <li class="nav-item">
         <button class="nav-link" [ngClass]="{'active': selectedDivision == 'SerieA'}" id="primeira-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button" role="tab" aria-controls="first-tab-pane" aria-selected="false" (click)="updateDivision('SerieA')"><img src="/assets/images/italy.png" class="pr-1" height="12px" alt="Italy">Serie A</button>
     </li>
+    <li class="nav-item">
+        <button class="nav-link" [ngClass]="{'active': selectedDivision == 'Ligue1'}" id="primeira-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button" role="tab" aria-controls="first-tab-pane" aria-selected="false" (click)="updateDivision('Ligue1')"><img src="/assets/images/france.png" class="pr-1" height="12px" alt="France">Ligue 1</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" [ngClass]="{'active': selectedDivision == 'Bundesliga'}" id="primeira-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button" role="tab" aria-controls="first-tab-pane" aria-selected="false" (click)="updateDivision('Bundesliga')"><img src="/assets/images/germany.png" class="pr-1" height="12px" alt="Germany">Bundesliga</button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link" [ngClass]="{'active': selectedDivision == 'Brasil'}" id="primeira-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button" role="tab" aria-controls="first-tab-pane" aria-selected="false" (click)="updateDivision('Brasil')"><img src="/assets/images/brasil.png" class="pr-1" height="12px" alt="Brasil">Brasileirão</button>
+    </li>
+    
 </ul>
 <div class="tab-content mt-1" id="myTabContent" style="height: 64%; overflow-y: auto; overflow-x: hidden;">
     <div class="tab-pane fade show active" id="first-tab-pane" role="tabpanel" aria-labelledby="first-tab" tabindex="0" *ngIf="selectedDivision != ''">
