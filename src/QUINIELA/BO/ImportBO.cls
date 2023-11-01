@@ -126,6 +126,18 @@ Method ImportData(pRequest As QUINIELA.Message.ImportRequest, pResponse As QUINI
     {
       set sc = ..ImportFromWeb("Brasil")
     }
+    elseif (pRequest.Operation = "Argentina")
+    {
+      set sc = ..ImportFromWeb("Argentina")
+    }
+    elseif (pRequest.Operation = "Eredivisie")
+    {
+      set sc = ..ImportFromWeb("Eredivisie")
+    }
+    elseif (pRequest.Operation = "1RFEF")
+    {
+      set sc = ..ImportFromWeb("1RFEF")
+    }
     set pResponse.Status = "Finished"
     Return sc
 }

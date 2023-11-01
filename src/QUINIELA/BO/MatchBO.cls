@@ -27,7 +27,8 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
         "(SELECT SUM(CASE WHEN IsVictory = 1 THEN 4-%VID ELSE 0 END) FROM "_
         "(SELECT TOP 3 SubMatch.IntDay, "_
         "CASE WHEN Result = 1 THEN 1 ELSE 0 END AS IsVictory "_
-        "FROM QUINIELA_Object.MatchTrain AS SubMatch "_
+        "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam "_
+        "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam) AS SubMatch "_
         "WHERE "_
         "UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam) "_
         "AND SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
@@ -42,7 +43,8 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
                 "(SELECT SUM(CASE WHEN IsVictory = 1 THEN 4-%VID ELSE 0 END) FROM "_
                 "(SELECT TOP 3 SubMatch.IntDay, "_
                 "CASE WHEN Result = 2 THEN 1 ELSE 0 END AS IsVictory "_
-                "FROM QUINIELA_Object.MatchTrain AS SubMatch "_
+                "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam "_
+                "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam) AS SubMatch "_
                 "WHERE "_
                 "UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam) "_
                 "AND SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
@@ -53,18 +55,64 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
             if ($$$ISOK(statusUpdateVisitorStreak)) {
                 set resultSetUpdateVisitorStreak = statementUpdateVisitorStreak.%Execute(newMatch.%Id())
                 if (resultSetUpdateVisitorStreak.%SQLCODE = 0) {
-                    set sqlPredict = "UPDATE QUINIELA_Object.MatchPredicted mp set mp.PredictedResult = (SELECT PREDICT(QuinielaModel) AS PredictedResult FROM QUINIELA_Object.MatchPredicted mpr WHERE mpr.%Id = mp.%Id), "_
-                        "mp.Probability1 = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '1')*100,2) FROM QUINIELA_Object.MatchPredicted mpr1 WHERE mpr1.%Id = mp.%Id), "_
-                        "mp.ProbabilityX = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '0')*100,2) FROM QUINIELA_Object.MatchPredicted mprX WHERE mprX.%Id = mp.%Id), "_
-                        "mp.Probability2 = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '2')*100,2) FROM QUINIELA_Object.MatchPredicted mpr2 WHERE mpr2.%Id = mp.%Id) "_
-                        "WHERE mp.%Id = ?"
-                    set statementPredict = ##class(%SQL.Statement).%New(), statementPredict.%ObjectSelectMode = 1
-                    set statusPredict = statementPredict.%Prepare(sqlPredict)
-                    if ($$$ISOK(statusPredict)) {                        
-                        set resultSetPredict = statementPredict.%Execute(newMatch.%Id())                        
-                    }
-                    else {
-                        set tSC = statusPredict
+                    set sqlUpdateLocalPoints = "UPDATE QUINIELA_Object.MatchPredicted SET QUINIELA_Object.MatchPredicted.LocalPoints = "_
+                        "(SELECT SUM(Points) FROM "_
+                        "(SELECT TOP 5 SubMatch.IntDay, "_
+                        "CASE WHEN ((Result = 1 AND UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam)) OR "_
+                        "(Result = 2 AND UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam))) THEN 3 WHEN Result = 0 THEN 1 ELSE 0 END AS Points "_
+                        "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam "_
+                        "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam) AS SubMatch "_
+                        "WHERE "_
+                        "(UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam) OR UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam)) "_
+                        "AND SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
+                        "ORDER BY SubMatch.IntDay DESC)) "_
+                        "WHERE QUINIELA_Object.MatchPredicted.ID = ? "
+                    set statementUpdateLocalPoints = ##class(%SQL.Statement).%New()
+                    set statusUpdateLocalPoints = statementUpdateLocalPoints.%Prepare(sqlUpdateLocalPoints)
+                    if ($$$ISOK(statusUpdateLocalPoints)) {
+                        set resultSetUpdateLocalPoints = statementUpdateLocalPoints.%Execute(newMatch.%Id())
+                        set sc = statusUpdateLocalPoints
+                        if (resultSetUpdateLocalPoints.%SQLCODE = 0) {
+                            set sqlUpdateVisitorPoints = "UPDATE QUINIELA_Object.MatchPredicted SET QUINIELA_Object.MatchPredicted.VisitorPoints = "_
+                                "(SELECT SUM(Points) FROM "_
+                                "(SELECT TOP 5 SubMatch.IntDay, "_
+                                "CASE WHEN ((Result = 1 AND UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam)) OR "_
+                                "(Result = 2 AND UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam))) THEN 3 WHEN Result = 0 THEN 1 ELSE 0 END AS Points "_
+                                "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam "_
+                                "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam) AS SubMatch "_
+                                "WHERE "_
+                                "(UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam) OR UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam)) "_
+                                "AND SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
+                                "ORDER BY SubMatch.IntDay DESC)) "_
+                                "WHERE QUINIELA_Object.MatchPredicted.ID = ? "
+                            set statementUpdateVisitorPoints = ##class(%SQL.Statement).%New()
+                            set statusUpdateVisitorPoints = statementUpdateVisitorPoints.%Prepare(sqlUpdateVisitorPoints)
+                            if ($$$ISOK(statusUpdateVisitorPoints)) {
+                                set resultSetUpdateVisitorPoints = statementUpdateVisitorPoints.%Execute(newMatch.%Id())
+                                set sc = statusUpdateVisitorPoints
+                                if (resultSetUpdateLocalPoints.%SQLCODE = 0) {
+                                    set sqlPredict = "UPDATE QUINIELA_Object.MatchPredicted mp set mp.PredictedResult = (SELECT PREDICT(QuinielaModel) AS PredictedResult FROM QUINIELA_Object.MatchPredicted mpr WHERE mpr.%Id = mp.%Id), "_
+                                        "mp.Probability1 = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '1')*100,2) FROM QUINIELA_Object.MatchPredicted mpr1 WHERE mpr1.%Id = mp.%Id), "_
+                                        "mp.ProbabilityX = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '0')*100,2) FROM QUINIELA_Object.MatchPredicted mprX WHERE mprX.%Id = mp.%Id), "_
+                                        "mp.Probability2 = (SELECT ROUND(PROBABILITY(QuinielaModel FOR '2')*100,2) FROM QUINIELA_Object.MatchPredicted mpr2 WHERE mpr2.%Id = mp.%Id) "_
+                                        "WHERE mp.%Id = ?"
+                                    set statementPredict = ##class(%SQL.Statement).%New(), statementPredict.%ObjectSelectMode = 1
+                                    set statusPredict = statementPredict.%Prepare(sqlPredict)
+                                    if ($$$ISOK(statusPredict)) {                        
+                                        set resultSetPredict = statementPredict.%Execute(newMatch.%Id())                        
+                                    }
+                                    else {
+                                        set tSC = statusPredict
+                                    }
+                                }
+                                else {
+                                    set sc = statusUpdateVisitorPoints
+                                }
+                            }
+                        }
+                        else {
+                            set sc = statusUpdateLocalPoints
+                        }
                     }
                 }
 

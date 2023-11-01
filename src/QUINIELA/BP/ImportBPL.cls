@@ -10,7 +10,7 @@ Storage Default
 /// BPL Definition
 XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 {
-<process language='objectscript' request='QUINIELA.Message.ImportRequest' response='QUINIELA.Message.ImportResponse' height='3500' width='2000' >
+<process language='objectscript' request='QUINIELA.Message.ImportRequest' response='QUINIELA.Message.ImportResponse' height='4100' width='2000' >
 <context>
 <property name='prepareRequest' type='QUINIELA.Message.PrepareRequest' instantiate='1' />
 <property name='prepareResponse' type='QUINIELA.Message.PrepareResponse' instantiate='0' />
@@ -39,9 +39,15 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <property name='importBundesligaResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
 <property name='importBrasilRequest' type='QUINIELA.Message.ImportRequest' instantiate='1' />
 <property name='importBrasilResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
+<property name='importArgentinaRequest' type='QUINIELA.Message.ImportRequest' instantiate='1' />
+<property name='importArgentinaResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
+<property name='importEredivisieRequest' type='QUINIELA.Message.ImportRequest' instantiate='1' />
+<property name='importEredivisieResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
+<property name='import1RFEFRequest' type='QUINIELA.Message.ImportRequest' instantiate='1' />
+<property name='import1RFEFResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
 </context>
-<sequence xend='200' yend='3250' >
-<scope xpos='200' ypos='250' xend='200' yend='3050' >
+<sequence xend='200' yend='3850' >
+<scope xpos='200' ypos='250' xend='200' yend='3650' >
 <assign name="Set operation" property="context.prepareRequest.Operation" value="&quot;Preparation of data&quot;" action="set" xpos='200' ypos='350' />
 <call name='Prepare tables' target='QUINIELA.BO.ImportBO' async='0' xpos='200' ypos='450' >
 <request type='QUINIELA.Message.PrepareRequest' >
@@ -51,7 +57,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="context.prepareResponse" value="callresponse" action="set" />
 </response>
 </call>
-<if name='Check preparation' condition='context.prepareResponse.Status = "Prepared"' xpos='200' ypos='550' xend='200' yend='2700' >
+<if name='Check preparation' condition='context.prepareResponse.Status = "Prepared"' xpos='200' ypos='550' xend='200' yend='3300' >
 <true>
 <assign name="Get First Division" property="context.importFirstRequest.Operation" value="&quot;First&quot;" action="set" xpos='335' ypos='700' />
 <call name='Read First Division' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='800' >
@@ -125,8 +131,35 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="context.importBrasilResponse" value="callresponse" action="set" />
 </response>
 </call>
-<sync name='Wait for calls' calls='Read First Division,Read Second Division,Read Primeira Division,Read Premier Division,Read Serie A,Read Ligue 1,Read Bundesliga,Read Brasileirao' type='all' xpos='335' ypos='2300' />
-<call name='Create Team Dictionary' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='2400' >
+<assign name="Get Argentina" property="context.importArgentinaRequest.Operation" value="&quot;Argentina&quot;" action="set" xpos='335' ypos='2300' />
+<call name='Read Argentina' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='2400' >
+<request type='QUINIELA.Message.ImportRequest' >
+<assign property="callrequest" value="context.importArgentinaRequest" action="set" />
+</request>
+<response type='QUINIELA.Message.ImportResponse' >
+<assign property="context.importArgentinaResponse" value="callresponse" action="set" />
+</response>
+</call>
+<assign name="Get Eredivisie" property="context.importEredivisieRequest.Operation" value="&quot;Eredivisie&quot;" action="set" xpos='335' ypos='2500' />
+<call name='Read Eredivisie' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='2600' >
+<request type='QUINIELA.Message.ImportRequest' >
+<assign property="callrequest" value="context.importEredivisieRequest" action="set" />
+</request>
+<response type='QUINIELA.Message.ImportResponse' >
+<assign property="context.importEredivisieResponse" value="callresponse" action="set" />
+</response>
+</call>
+<assign name="Get 1ª RFEF" property="context.import1RFEFRequest.Operation" value="&quot;1RFEF&quot;" action="set" xpos='335' ypos='2700' />
+<call name='Read 1ª RFEF' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='2800' >
+<request type='QUINIELA.Message.ImportRequest' >
+<assign property="callrequest" value="context.import1RFEFRequest" action="set" />
+</request>
+<response type='QUINIELA.Message.ImportResponse' >
+<assign property="context.import1RFEFResponse" value="callresponse" action="set" />
+</response>
+</call>
+<sync name='Wait for calls' calls='Read First Division,Read Second Division,Read Primeira Division,Read Premier Division,Read Serie A,Read Ligue 1,Read Bundesliga,Read Brasileirao,Read Argentina,Read Eredivisie,Read 1ª RFEF' type='all' xpos='335' ypos='2900' />
+<call name='Create Team Dictionary' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='3000' >
 <request type='QUINIELA.Message.DictionaryTeamRequest' >
 <assign property="callrequest" value="context.dictionaryTeamRequest" action="set" />
 </request>
@@ -134,7 +167,7 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="context.dictionaryTeamResponse" value="callresponse" action="set" />
 </response>
 </call>
-<call name='Create Referee Dictionary' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='2500' >
+<call name='Create Referee Dictionary' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='3100' >
 <request type='QUINIELA.Message.DictionaryRefereeRequest' >
 <assign property="callrequest" value="context.dictionaryRefereeRequest" action="set" />
 </request>
@@ -142,19 +175,19 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="context.dictionaryRefereeResponse" value="callresponse" action="set" />
 </response>
 </call>
-<sync name='Wait for calls' calls='Create Team Dictionary,Create Referee Dictionary' type='all' xpos='335' ypos='2600' />
+<sync name='Wait for calls' calls='Create Team Dictionary,Create Referee Dictionary' type='all' xpos='335' ypos='3200' />
 </true>
 </if>
-<empty name='BPL Finished' xpos='200' ypos='2800' />
+<empty name='BPL Finished' xpos='200' ypos='3400' />
 <faulthandlers>
-<catchall name='Check error' xpos='200' ypos='2900' xend='200' yend='350' >
+<catchall name='Check error' xpos='200' ypos='3500' xend='200' yend='350' >
 <code name='Save error' xpos='200' ypos='250' >
 <![CDATA[ set context.error = $System.Status.GetErrorCodes(..%Context.%LastError)]]>
 </code>
 </catchall>
 </faulthandlers>
 </scope>
-<code name='Generate response' xpos='200' ypos='3150' >
+<code name='Generate response' xpos='200' ypos='3750' >
 <![CDATA[ set importResponse = ##class(QUINIELA.Message.ImportResponse).%New()
  set importResponse.Operation = "Import"
  if (context.error '= "false")
