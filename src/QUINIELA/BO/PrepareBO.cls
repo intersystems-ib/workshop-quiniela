@@ -36,9 +36,8 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
                 set resultSetMatchTrain = statementMatchTrain.%Execute()
                 if (resultSetMatchTrain.%SQLCODE = 0) {
                     set sqlUpdateLocalStreak = "UPDATE QUINIELA_Object.MatchTrain SET QUINIELA_Object.MatchTrain.LocalStreak = "_
-                        "(SELECT SUM(CASE WHEN IsVictory = 1 THEN 4-%VID ELSE 0 END) FROM "_
-                        "(SELECT TOP 3 SubMatch.IntDay, "_
-                        "CASE WHEN Result = 1 THEN 1 ELSE 0 END AS IsVictory "_
+                        "(SELECT SUM(CASE Result WHEN 1 THEN 3 WHEN 0 THEN 1 ELSE 0 END) FROM "_
+                        "(SELECT TOP 3 SubMatch.IntDay, Result "_
                         "FROM QUINIELA_Object.MatchTrain AS SubMatch "_
                         "WHERE "_
                         "UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchTrain.LocalTeam) "_
@@ -50,9 +49,8 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
                         set resultSetUpdateLocalStreak = statementUpdateLocalStreak.%Execute()
                         if (resultSetUpdateLocalStreak.%SQLCODE = 0) {
                             set sqlUpdateVisitorStreak = "UPDATE QUINIELA_Object.MatchTrain SET QUINIELA_Object.MatchTrain.VisitorStreak = "_
-                                "(SELECT SUM(CASE WHEN IsVictory = 1 THEN 4-%VID ELSE 0 END) FROM "_
-                                "(SELECT TOP 3 SubMatch.IntDay, "_
-                                "CASE WHEN Result = 2 THEN 1 ELSE 0 END AS IsVictory "_
+                                "(SELECT SUM(CASE Result WHEN 1 THEN 3 WHEN 0 THEN 1 ELSE 0 END) FROM "_
+                                "(SELECT TOP 3 SubMatch.IntDay, Result "_
                                 "FROM QUINIELA_Object.MatchTrain AS SubMatch "_
                                 "WHERE "_
                                 "UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchTrain.VisitorTeam) "_
@@ -95,6 +93,21 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
                                             if ($$$ISOK(statusUpdateVisitorPoints)) {
                                                 set resultSetUpdateVisitorPoints = statementUpdateVisitorPoints.%Execute()
                                                 set sc = statusUpdateVisitorPoints
+                                                if (resultSetUpdateVisitorPoints.%SQLCODE = 0) {
+                                                    set sqlUpdatePredictionStreak = "UPDATE QUINIELA_Object.MatchTrain SET QUINIELA_Object.MatchTrain.PredictionStreak = "_
+                                                        "CASE WHEN QUINIELA_Object.MatchTrain.LocalStreak = QUINIELA_Object.MatchTrain.VisitorStreak THEN '0' "_
+                                                        "WHEN QUINIELA_Object.MatchTrain.LocalStreak > QUINIELA_Object.MatchTrain.VisitorStreak THEN '1' "_
+                                                        "ELSE '2' END"
+                                                    set statementUpdatePredictionStreak = ##class(%SQL.Statement).%New()
+                                                    set statusUpdatePredictionStreak = statementUpdatePredictionStreak.%Prepare(sqlUpdatePredictionStreak)
+                                                    if ($$$ISOK(statusUpdatePredictionStreak)) {
+                                                        set resultSetUpdatePredictionStreak = statementUpdatePredictionStreak.%Execute()
+                                                        set sc = statusUpdatePredictionStreak
+                                                    }
+                                                    else {
+                                                        set sc = statusUpdatePredictionStreak
+                                                    }
+                                                }
                                             }
                                             else {
                                                 set sc = statusUpdateVisitorPoints

@@ -11,10 +11,10 @@ Property LocalTeam As %String;
 Property VisitorTeam As %String;
 
 /// Local Streak
-Property LocalStreak As %Integer;
+Property LocalStreak As %String;
 
 /// Visitor Streak
-Property VisitorStreak As %Integer;
+Property VisitorStreak As %String;
 
 /// Referee
 Property Referee As %String;
@@ -32,10 +32,13 @@ Property Journey As %String;
 Property IntDay As %Integer;
 
 /// Local Points
-Property LocalPoints As %Integer;
+Property LocalPoints As %String;
 
 /// Visitor Streak
-Property VisitorPoints As %Integer;
+Property VisitorPoints As %String;
+
+/// Prediction Streak
+Property PredictionStreak As %String;
 
 // Index LocalStreakIDX On (LocalTeam, IntDay);
 
@@ -82,6 +85,9 @@ Storage Default
 </Value>
 <Value name="13">
 <Value>VisitorPoints</Value>
+</Value>
+<Value name="14">
+<Value>PredictionStreak</Value>
 </Value>
 </Data>
 <DataLocation>^QUINIELA.Object.MatchTrainD</DataLocation>
