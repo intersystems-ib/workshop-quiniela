@@ -45,6 +45,8 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <property name='importEredivisieResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
 <property name='import1RFEFRequest' type='QUINIELA.Message.ImportRequest' instantiate='1' />
 <property name='import1RFEFResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
+<property name='importEurocupRequest' type='QUINIELA.Message.ImportRequest' instantiate='1' />
+<property name='importEurocupResponse' type='QUINIELA.Message.ImportResponse' instantiate='1' />
 </context>
 <sequence xend='200' yend='3850' >
 <scope xpos='200' ypos='250' xend='200' yend='3650' >
@@ -158,7 +160,16 @@ XData BPL [ XMLNamespace = "http://www.intersystems.com/bpl" ]
 <assign property="context.import1RFEFResponse" value="callresponse" action="set" />
 </response>
 </call>
-<sync name='Wait for calls' calls='Read First Division,Read Second Division,Read Primeira Division,Read Premier Division,Read Serie A,Read Ligue 1,Read Bundesliga,Read Brasileirao,Read Argentina,Read Eredivisie,Read 1ª RFEF' type='all' xpos='335' ypos='2900' />
+<assign name="Get Eurocup" property="context.importEurocupRequest.Operation" value="&quot;Eurocup&quot;" action="set" xpos='615' ypos='2691' />
+<call name='Read Eurocup' target='QUINIELA.BO.ImportBO' async='1' xpos='688' ypos='2405' >
+<request type='QUINIELA.Message.ImportRequest' >
+<assign property="callrequest" value="context.importEurocupRequest" action="set" />
+</request>
+<response type='QUINIELA.Message.ImportResponse' >
+<assign property="context.importEurocupResponse" value="callresponse" action="set" />
+</response>
+</call>
+<sync name='Wait for calls' calls='Read First Division,Read Second Division,Read Primeira Division,Read Premier Division,Read Serie A,Read Ligue 1,Read Bundesliga,Read Brasileirao,Read Argentina,Read Eredivisie,Read Eurocup' type='all' xpos='335' ypos='2900' />
 <call name='Create Team Dictionary' target='QUINIELA.BO.ImportBO' async='1' xpos='335' ypos='3000' >
 <request type='QUINIELA.Message.DictionaryTeamRequest' >
 <assign property="callrequest" value="context.dictionaryTeamRequest" action="set" />

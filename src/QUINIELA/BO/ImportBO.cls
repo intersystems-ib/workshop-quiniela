@@ -138,6 +138,10 @@ Method ImportData(pRequest As QUINIELA.Message.ImportRequest, pResponse As QUINI
     {
       set sc = ..ImportFromWeb("1RFEF")
     }
+    elseif (pRequest.Operation = "Eurocup")
+    {
+      set sc = ..ImportFromWeb("Eurocup")
+    }
     set pResponse.Status = "Finished"
     Return sc
 }

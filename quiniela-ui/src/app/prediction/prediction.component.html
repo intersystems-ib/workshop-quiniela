@@ -38,6 +38,9 @@
     <li class="nav-item">
         <button class="nav-link" [ngClass]="{'active': selectedDivision == 'Eredivisie'}" id="primeira-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button" role="tab" aria-controls="first-tab-pane" aria-selected="false" (click)="updateDivision('Eredivisie')"><img src="/assets/images/netherlands.png" class="pr-1" height="12px" alt="Eredivisie">Eredivisie</button>
     </li>
+    <li class="nav-item">
+        <button class="nav-link" [ngClass]="{'active': selectedDivision == 'Eurocup'}" id="primeira-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button" role="tab" aria-controls="first-tab-pane" aria-selected="false" (click)="updateDivision('Eurocup')"><img src="/assets/images/europe.png" class="pr-1" height="12px" alt="Eurocup">Eurocup</button>
+    </li>
     
 </ul>
 <div class="tab-content mt-1" id="myTabContent" style="height: 64%; overflow-y: auto; overflow-x: hidden;">
