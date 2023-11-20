@@ -49,7 +49,7 @@ Method PrepareData(pRequest As QUINIELA.Message.PrepareRequest, pResponse As QUI
                         set resultSetUpdateLocalStreak = statementUpdateLocalStreak.%Execute()
                         if (resultSetUpdateLocalStreak.%SQLCODE = 0) {
                             set sqlUpdateVisitorStreak = "UPDATE QUINIELA_Object.MatchTrain SET QUINIELA_Object.MatchTrain.VisitorStreak = "_
-                                "(SELECT SUM(CASE Result WHEN 1 THEN 3 WHEN 0 THEN 1 ELSE 0 END) FROM "_
+                                "(SELECT SUM(CASE Result WHEN 2 THEN 3 WHEN 0 THEN 1 ELSE 0 END) FROM "_
                                 "(SELECT TOP 3 SubMatch.IntDay, Result "_
                                 "FROM QUINIELA_Object.MatchTrain AS SubMatch "_
                                 "WHERE "_
