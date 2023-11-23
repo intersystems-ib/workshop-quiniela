@@ -26,8 +26,7 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
     set sqlUpdateLocalStreak = "UPDATE QUINIELA_Object.MatchPredicted SET QUINIELA_Object.MatchPredicted.LocalStreak = "_
         "(SELECT SUM(CASE Result WHEN 1 THEN 3 WHEN 0 THEN 1 ELSE 0 END) FROM "_
         "(SELECT TOP 3 SubMatch.IntDay, Result "_
-        "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam "_
-        "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam) AS SubMatch "_
+        "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain WHERE LocalTeam = ?) AS SubMatch "_
         "WHERE "_
         "SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
         "ORDER BY SubMatch.IntDay DESC)) "_
@@ -35,13 +34,12 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
     set statementUpdateLocalStreak = ##class(%SQL.Statement).%New()
     set statusUpdateLocalStreak = statementUpdateLocalStreak.%Prepare(sqlUpdateLocalStreak)
     if ($$$ISOK(statusUpdateLocalStreak)) {
-        set resultSetUpdateLocalStreak = statementUpdateLocalStreak.%Execute(newMatch.%Id())
+        set resultSetUpdateLocalStreak = statementUpdateLocalStreak.%Execute(newMatch.LocalTeam, newMatch.%Id())
         if (resultSetUpdateLocalStreak.%SQLCODE = 0) {
             set sqlUpdateVisitorStreak = "UPDATE QUINIELA_Object.MatchPredicted SET QUINIELA_Object.MatchPredicted.VisitorStreak = "_
                 "(SELECT SUM(CASE Result WHEN 2 THEN 3 WHEN 0 THEN 1 ELSE 0 END) FROM "_
                 "(SELECT TOP 3 SubMatch.IntDay, Result "_
-                "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted WHERE VisitorTeam = QUINIELA_Object.MatchPredicted.VisitorTeam "_
-                "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain WHERE VisitorTeam = QUINIELA_Object.MatchPredicted.VisitorTeam) AS SubMatch "_
+                "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain WHERE VisitorTeam = ?) AS SubMatch "_
                 "WHERE "_
                 "SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
                 "ORDER BY SubMatch.IntDay DESC)) "_
@@ -49,15 +47,14 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
             set statementUpdateVisitorStreak = ##class(%SQL.Statement).%New()
             set statusUpdateVisitorStreak = statementUpdateVisitorStreak.%Prepare(sqlUpdateVisitorStreak)
             if ($$$ISOK(statusUpdateVisitorStreak)) {
-                set resultSetUpdateVisitorStreak = statementUpdateVisitorStreak.%Execute(newMatch.%Id())
+                set resultSetUpdateVisitorStreak = statementUpdateVisitorStreak.%Execute(newMatch.VisitorTeam, newMatch.%Id())
                 if (resultSetUpdateVisitorStreak.%SQLCODE = 0) {
                     set sqlUpdateLocalPoints = "UPDATE QUINIELA_Object.MatchPredicted SET QUINIELA_Object.MatchPredicted.LocalPoints = "_
                         "(SELECT SUM(Points) FROM "_
                         "(SELECT TOP 5 SubMatch.IntDay, "_
                         "CASE WHEN ((Result = 1 AND UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam)) OR "_
                         "(Result = 2 AND UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam))) THEN 3 WHEN Result = 0 THEN 1 ELSE 0 END AS Points "_
-                        "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam "_
-                        "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam) AS SubMatch "_
+                        "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain  WHERE LocalTeam = QUINIELA_Object.MatchPredicted.LocalTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.LocalTeam) AS SubMatch "_
                         "WHERE "_
                         "(UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam) OR UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.LocalTeam)) "_
                         "AND SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
@@ -74,8 +71,7 @@ Method SaveMatch(pRequest As QUINIELA.Message.MatchRequest, Output pResponse As 
                                 "(SELECT TOP 5 SubMatch.IntDay, "_
                                 "CASE WHEN ((Result = 1 AND UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam)) OR "_
                                 "(Result = 2 AND UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam))) THEN 3 WHEN Result = 0 THEN 1 ELSE 0 END AS Points "_
-                                "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchPredicted WHERE LocalTeam = QUINIELA_Object.MatchPredicted.VisitorTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.VisitorTeam "_
-                                "UNION SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain WHERE LocalTeam = QUINIELA_Object.MatchPredicted.VisitorTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.VisitorTeam) AS SubMatch "_
+                                "FROM (SELECT IntDay, Result, LocalTeam, VisitorTeam FROM QUINIELA_Object.MatchTrain WHERE LocalTeam = QUINIELA_Object.MatchPredicted.VisitorTeam OR VisitorTeam = QUINIELA_Object.MatchPredicted.VisitorTeam) AS SubMatch "_
                                 "WHERE "_
                                 "(UPPER(SubMatch.LocalTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam) OR UPPER(SubMatch.VisitorTeam) = UPPER(QUINIELA_Object.MatchPredicted.VisitorTeam)) "_
                                 "AND SubMatch.IntDay < QUINIELA_Object.MatchPredicted.IntDay "_
