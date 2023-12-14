@@ -31,12 +31,6 @@ Property Journey As %String;
 /// Integer day
 Property IntDay As %Integer;
 
-/// Local Points
-Property LocalPoints As %String;
-
-/// Visitor Streak
-Property VisitorPoints As %String;
-
 /// Prediction Streak
 Property PredictionStreak As %String;
 
@@ -81,12 +75,6 @@ Storage Default
 <Value>IntDay</Value>
 </Value>
 <Value name="12">
-<Value>LocalPoints</Value>
-</Value>
-<Value name="13">
-<Value>VisitorPoints</Value>
-</Value>
-<Value name="14">
 <Value>PredictionStreak</Value>
 </Value>
 </Data>
